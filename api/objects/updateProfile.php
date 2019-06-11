@@ -1,5 +1,7 @@
 <?php
 
+include_once 'getMasterData.php';
+
 class updateProfile
 {
     private $user = "user" ;
@@ -65,7 +67,7 @@ class updateProfile
     }
     public function changeContactNo($userId,$contactNo)             //Update Contact No
     {
-        //Call to verify otp from mobile no.
+//        Call to verify otp from mobile no.
 
         $query = "UPDATE $this->user SET contactNo = :contactNo WHERE userId = :userId";
 
@@ -99,10 +101,13 @@ class updateProfile
         else
             return false;
     }
-    public function changePincodeId($userAddressId,$pincode)
+    public function changePincodeId( $userAddressId , $pincode , $city , $state , $country )
     {
         //        get pincode id from getMasterData.php
-        $this->pincodeId = $this->master($pincode);
+        $this->countryId = $this->master->getCountryId( $country ) ;
+        $this->stateId = $this->master->getStateId( $state , $this->countryId ) ;
+        $this->cityId = $this->master->getCityId( $city , $this->stateId ) ;
+        $this->pincodeId = $this->master->getPincodeId( $pincode,$this->cityId ) ;
         $query = "UPDATE $this->userAddress SET pincodeId=:pincodeId WHERE userAddressId = :userAddressId " ;
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userAddressId" , $userAddressId) ;
@@ -110,32 +115,11 @@ class updateProfile
         $stmt->execute();
 
     }
-    public function changeCityId($pincodeId,$city)
-    {
-        //        get city id from getMasterData.php
-        $this->cityId = $this->master($city);
-        $query = "UPDATE $this->pincode SET cityId=:cityId WHERE pincodeId = :pincodeId " ;
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":userAddressId" , $userAddressId) ;
-        $stmt->bindParam(":pincodeId" , $this->pincodeId) ;
-        $stmt->execute();
-
-
-    }
-    public function changeStateId($userAddressId,$state)
-    {
-        //        get state id from getMasterData.php
-    }
-    public function changeCountryId($userId,$userAddressId,$country)
+    public function changeCountryId($userId,$country)
     {
         //        get country id from getMasterData.php
-        $this->countryId = $this->master($country);
+        $this->countryId = $this->master->getCountryId($country);
         //Update country id for state table
-        $query1 = "UPDATE $this->state SET countryId = :countryId WHERE userAddressId = :userAddressId " ;
-        $stmt1 = $this->conn->prepare($query1);
-        $stmt1->bindParam(":countryId" , $this->countryId) ;
-        $stmt1->bindParam(":userAddressId" , $userAddressId) ;
-        $stmt1->execute();
 
         //Update country id for user table
         $query2 = "UPDATE $this->user SET countryId = :countryId WHERE userId = :userId " ;

@@ -47,7 +47,7 @@ class GetMasterData
         $exist1->execute();
         $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
         return $stateExist["stateId"];
-        
+
     }
 
     //function for getting cityId
@@ -96,40 +96,40 @@ class GetMasterData
     }
 
     //function for getting list of countries
-       public function getCountries()
-       {
-           $query = " SELECT country FROM $this->countryTable ";
-           $exist = $this->conn->prepare($query);
-           $exist->execute();
-           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-                $data[]=$row;
-            }
-            return $data;    
+    public function getCountries()
+    {
+        $query = " SELECT country FROM $this->countryTable ";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row;
         }
+        return $data;
+    }
 
-        //function for getting list of states
-       public function getStates( $countryId )
-       {
-           $query = "SELECT state FROM $this->stateTable WHERE countryId=: countryId";
-           $exist = $this->conn->prepare($query);
-           $exist->bindParam(":countryId",$countryId);
-           $exist->execute();
-           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-                $data[]=$row;
-            }
-            return $data;    
+    //function for getting list of states
+    public function getStates( $countryId )
+    {
+        $query = "SELECT state FROM $this->stateTable WHERE countryId = :countryId";
+        $exist = $this->conn->prepare($query);
+        $exist->bindParam(":countryId",$countryId);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row;
         }
+        return $data;
+    }
 
-        //function for getting list of cities
-       public function getCities( $stateId )
-       {
-           $query = " SELECT city FROM $this->stateTable WHERE stateId=: stateId ";
-           $exist = $this->conn->prepare($query);
-           $exist->bindParam(":stateId",$stateId);
-           $exist->execute();
-           while($row=$exist->fetch(PDO::FETCH_ASSOC)){
-                $data[]=$row;
-            }
-            return $data;    
+    //function for getting list of cities
+    public function getCities( $stateId )
+    {
+        $query = " SELECT city FROM $this->cityTable WHERE stateId = :stateId ";
+        $exist = $this->conn->prepare($query);
+        $exist->bindParam(":stateId",$stateId);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row;
         }
-}       
+        return $data;
+    }
+}

@@ -58,7 +58,8 @@ class Register
 
     function registerUser(){
 
-        //INSERT STATEMENTS 
+
+        //INSERT STATEMENTS
         $query2= "INSERT INTO  $this->user (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
         $query6="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
         $query7="INSERT INTO $this->userCredentials(userId,password) VALUES(:userId,:password)";
@@ -111,24 +112,29 @@ class Register
         $stmt2->bindParam(":contactNo", $this->contactNo);
         $stmt2->bindParam(":emailId", $this->emailId);
         $stmt2->bindParam(":countryId", $this->countryId);
+        $stmt2->execute();
+        $this->getUserId();
 
         //USER ADDRESS TABLE
+        $stmt6->bindParam(":userId", $this->userId );
         $stmt6->bindParam(":line1",$this->line1);
         $stmt6->bindParam(":line2",$this->line2);
         $stmt6->bindParam(":latitude",$this->latitude);
         $stmt6->bindParam(":longitude",$this->longitude);
         $stmt6->bindParam(":placeId",$this->placeId);
-        $stmt6->bindParam(":userId", $this->userId );
+
         $stmt6->bindParam(":pincodeId", $this->pincodeId);
+        $stmt6->execute();
+
 
         //USER CREDENTIALS TABLE
         $stmt7->bindParam("userId",$this->userId);
         $stmt7->bindParam("password",$this->password);
 
         //EXECUTE STATEMENTS
-        $stmt2->execute();
 
-        if($stmt6->execute() && $stmt7->execute())
+
+        if( $stmt7->execute())
             return true;
         return false;
 

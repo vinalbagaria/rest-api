@@ -58,7 +58,7 @@ if (
     $user->placeId=$data->placeId;
 
     $user->password=$data->password;
-    
+
     if ($user->registerUser()) {
 
         // set response code - 201 created

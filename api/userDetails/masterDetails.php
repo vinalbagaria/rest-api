@@ -19,16 +19,24 @@ $data = json_decode(file_get_contents("php://input"));
 
 //DISPLAY LIST OF COUNTRIES
 $countryList[] = $master->getCountries();
-echo json_encode(array("message"=> $countryList));
-
+echo json_encode(array("countryList"=> $countryList));
 
 //DISPLAY LIST OF STATES
-//echo json_encode(array("message"=> $data->country));
-//echo json_encode(array("message"=>$master->getCountryId($data->country)));
-// $stateList[] = $master->getStates( $master->getCountryId($data->country));
-// echo json_encode(array("message"=> $stateList));
+if($data->country && !$data->state){
+    $countryId=$master->getCountryId($data->country);
+    $stateList[] = $master->getStates($countryId);
+    echo json_encode(array("stateList"=> $stateList));
 
-// $cityList[] = $master->getCities( $master->getStateId($data->state,$master->getCountryId($data->country)));
-//  echo json_encode(array("message"=> $cityList));
+}
 
+//DISPLAY LIST OF CITIES
+if($data->state && $data->country){
+    $countryId=$master->getCountryId($data->country);
+    $stateList[] = $master->getStates($countryId);
+    echo json_encode(array("stateList"=> $stateList));
 
+    $stateId=$master->getStateId($data->state,$countryId);
+    $cityList[] = $master->getCities( $stateId);
+    echo json_encode(array("cityList"=> $cityList));
+
+}

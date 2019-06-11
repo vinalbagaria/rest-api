@@ -26,10 +26,10 @@ class UpdatePassword
             $stmt1->bindParam(":userId",$userId);
             $stmt1->bindParam(":newPassword",$newPassword);
             if($stmt1->execute())
-                //return true;
+//                return true;
                 echo json_encode(array("message"=>"Password Updated successfully."));
             else
-                //return false;
+//                return false;
                 echo json_encode(array("message"=>"Error in updating password.try again"));
 
         } else

@@ -68,7 +68,16 @@ if(
 }
 if(
     !empty($data->pincode) &&
+    !empty($data->userAddressId) &&
+    !empty($data->city) &&
+    !empty($data->state) &&
+    !empty($data->country) &&
+    !empty($data->userId) &&
     !empty($data->userAddressId)
 ){
-
+    if( $updateProfile->changeCountryId($data->userId,$data->country) && $updateProfile->changePincodeId($data->userAddressId,$data->pincode,$data->city,$data->state,$data->country))
+        echo json_encode(array("message"=>"Update Successful"));
+    else
+        echo json_encode(array("message"=>"Update Unsuccessful"));
 }
+

@@ -6,7 +6,7 @@ header("Content-Type: application/json; charset=UTF-8");
 // database connection will be here
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/login.php';
+include_once '../userObjects/login.php';
 
 // instantiate database and Login object
 $database = new Database();

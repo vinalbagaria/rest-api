@@ -4,6 +4,8 @@ class UpdateMasterData
 {
     private $conn;
     private $stateTable = "state" ;
+    private $cityTable = "city" ;
+    private $pincodeTable = "pincode" ;
     private $roleTable = "role" ;
     private $amenitiesTable = "amenities" ;
     private $documentTypeTable = "documentType" ;

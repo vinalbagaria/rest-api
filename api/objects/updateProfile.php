@@ -1,6 +1,6 @@
 <?php
 
-include_once 'getMasterData.php';
+include_once '../MasterData/getMasterData.php';
 
 class updateProfile
 {

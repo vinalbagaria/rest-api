@@ -1,5 +1,8 @@
 <?php
 
+
+ include_once 'updateMasterData.php';
+
 class GetMasterData
 {
     private $conn;
@@ -10,10 +13,12 @@ class GetMasterData
     private $stateTable = "state";
     private $cityTable = "city";
     private $pincodeTable = "pincode";
+    private $updateMaster;
 
     public function __construct($db)
     {
         $this->conn = $db;
+        $this->updateMaster = new UpdateMasterData( $db ) ;
     }
 
     //function for getting countryId
@@ -37,13 +42,8 @@ class GetMasterData
         $exist1->execute();
         $stateExist=$exist1->fetch(PDO:: FETCH_ASSOC);
 
-        if( !$stateExist ){
-            $query3 = "INSERT INTO $this->stateTable(state , countryId) VALUES (:state , :countryId)";
-            $stmt3= $this->conn->prepare( $query3 );
-            $stmt3->bindParam(":state", $state);
-            $stmt3->bindParam(":countryId",$countryId );
-            $stmt3->execute();
-        }
+        if( !$stateExist )
+            $this->updateMaster->updateState($state,$countryId);
         $exist1->execute();
         $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
         return $stateExist["stateId"];

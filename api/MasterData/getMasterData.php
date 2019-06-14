@@ -1,7 +1,7 @@
 <?php
 
 
- include_once 'updateMasterData.php';
+include_once 'updateMasterData.php';
 
 class GetMasterData
 {
@@ -24,7 +24,7 @@ class GetMasterData
     //function for getting countryId
     public function getCountryId($country)
     {
-        $query = "SELECT countryId FROM $this->countryTable WHERE country=:country";
+        $query = "SELECT countryId FROM $this->countryTable WHERE country = :country";
         $countryId = $this->conn->prepare($query);
         $countryId->bindParam(":country", $country);
         $countryId->execute();
@@ -43,7 +43,8 @@ class GetMasterData
         $stateExist=$exist1->fetch(PDO:: FETCH_ASSOC);
 
         if( !$stateExist )
-            $this->updateMaster->updateState($state,$countryId);
+            $this->updateMaster->addState($state,$countryId);
+
         $exist1->execute();
         $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
         return $stateExist["stateId"];
@@ -60,13 +61,7 @@ class GetMasterData
         $cityExist = $exist2->fetch(PDO::FETCH_ASSOC);
 
         if(!$cityExist)
-        {
-            $query4 = "INSERT INTO $this->cityTable(city,stateId) VALUES (:city,:stateId)";
-            $stmt4 = $this->conn->prepare($query4);
-            $stmt4->bindParam(":city", $city);
-            $stmt4->bindParam(":stateId", $stateId);
-            $stmt4->execute();
-        }
+            $this->updateMaster->addCity($city,$stateId) ;
 
         $exist2->execute();
         $cityExist=$exist2->fetch(PDO::FETCH_ASSOC);
@@ -83,13 +78,7 @@ class GetMasterData
 
         $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
         if(!$pincodeExist)
-        {
-            $query5 = "INSERT INTO $this->pincodeTable(pincode,cityId) VALUES (:pincode,:cityId)";
-            $stmt5 = $this->conn->prepare($query5);
-            $stmt5-> bindParam(":pincode",$pincode);
-            $stmt5-> bindParam(":cityId",$cityId);
-            $stmt5-> execute();
-        }
+            $this->updateMaster->addPincode($pincode,$cityId) ;
         $exist3->execute();
         $pincode = $exist3->fetch(PDO::FETCH_ASSOC);
         return $pincode["pincodeId"];

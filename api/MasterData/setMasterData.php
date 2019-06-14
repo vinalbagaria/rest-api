@@ -30,7 +30,7 @@ if(
     !empty($data->roleType)
 ){
     if($setMaster->userRole($data->roleType))
-        echo json_encode("State updated successfully");
+        echo json_encode("role updated successfully");
     else
         echo json_encode("Update Unsuccessful");
 }

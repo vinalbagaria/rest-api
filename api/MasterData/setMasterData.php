@@ -7,6 +7,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+include_once 'getPropertyMasterData.php';
 include_once 'updateMasterData.php';
 include '../config/database.php';
 
@@ -14,6 +15,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 $setMaster = new UpdateMasterData($db);
+$getPropertyMaster = new getPropertyMasterData($db);
 $data = json_decode(file_get_contents("php://input"));
 
 if (
@@ -27,14 +29,14 @@ if (
 
 }
 
-if (
-!empty($data->roleType)
-) {
-    if ($setMaster->addUserRole($data->roleType))
-        echo json_encode("Roletype updated successfully");
-    else
-        echo json_encode("Update Unsuccessful");
-}
+//if (
+//!empty($data->roleType)
+//) {
+//    if ($setMaster->addUserRole($data->roleType))
+//        echo json_encode("Roletype updated successfully");
+//    else
+//        echo json_encode("Update Unsuccessful");
+//}
 
 if (
 !empty($data->amenity)
@@ -63,14 +65,14 @@ if (
         echo json_encode("cannot be inserted");
 }
 
-if (
-!empty($data->configurationType)
-) {
-    if ($setMaster->addConfigurationType($data->configurationType))
-        echo json_encode("Configuration Type is inserted successfully");
-    else
-        echo json_encode("cannot be inserted");
-}
+//if (
+//!empty($data->configurationType)
+//) {
+//    if ($setMaster->addConfigurationType($data->configurationType))
+//        echo json_encode("Configuration Type is inserted successfully");
+//    else
+//        echo json_encode("cannot be inserted");
+//}
 
 if (
 !empty($data->socialMediaName)
@@ -86,6 +88,28 @@ if (
 ) {
     if ($setMaster->addUnit($data->unitName))
         echo json_encode("Unit Type is inserted successfully");
+    else
+        echo json_encode("cannot be inserted");
+}
+
+if
+(
+!empty($data->roleType)
+){
+    $roleId = $getPropertyMaster->getRoleId($data->roleType);
+    if ($roleId)
+        echo json_encode($roleId);
+    else
+        echo json_encode("cannot be inserted");
+}
+
+if
+(
+!empty($data->configurationType)
+){
+    $configurationId = $getPropertyMaster->getConfigurationId($data->configurationType);
+    if ($configurationId)
+        echo json_encode($configurationId);
     else
         echo json_encode("cannot be inserted");
 }

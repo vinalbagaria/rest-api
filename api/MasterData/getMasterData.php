@@ -50,10 +50,12 @@ class GetMasterData
         $stateExist=$exist1->fetch(PDO:: FETCH_ASSOC);
 
         if( !$stateExist )
-            $this->updateMaster->addState($state,$countryId);
+        {
+            $this->updateMaster->addState($state, $countryId);
 
-        $exist1->execute();
-        $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
+            $exist1->execute();
+            $stateExist = $exist1->fetch(PDO::FETCH_ASSOC);
+        }
         return $stateExist["stateId"];
 
     }
@@ -68,10 +70,12 @@ class GetMasterData
         $cityExist = $exist2->fetch(PDO::FETCH_ASSOC);
 
         if(!$cityExist)
+        {
             $this->updateMaster->addCity($city,$stateId) ;
 
-        $exist2->execute();
-        $cityExist=$exist2->fetch(PDO::FETCH_ASSOC);
+            $exist2->execute();
+            $cityExist=$exist2->fetch(PDO::FETCH_ASSOC);
+        }
         return $cityExist["cityId"];
     }
 
@@ -85,9 +89,11 @@ class GetMasterData
 
         $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
         if(!$pincodeExist)
-            $this->updateMaster->addPincode($pincode,$cityId) ;
-        $exist3->execute();
-        $pincode = $exist3->fetch(PDO::FETCH_ASSOC);
+        {
+            $this->updateMaster->addPincode($pincode, $cityId);
+            $exist3->execute();
+            $pincode = $exist3->fetch(PDO::FETCH_ASSOC);
+        }
         return $pincode["pincodeId"];
     }
 
@@ -219,5 +225,4 @@ class GetMasterData
         return $data;
     }
 
-   
 }

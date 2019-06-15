@@ -11,7 +11,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../config/database.php';
 
 // instantiate product object
-include_once '../objects/register.php';
+include_once '../userObjects/register.php';
 
 $database = new Database();
 $db = $database->getConnection();

@@ -14,6 +14,13 @@ class GetMasterData
     private $cityTable = "city";
     private $pincodeTable = "pincode";
     private $updateMaster;
+    private $roleTable = "role" ;
+    private $amenitiesTable = "amenities" ;
+    private $documentTypeTable = "documentType" ;
+    private $configurationTable = "configuration" ;
+    private $propertyTypeTable = "propertyType" ;
+    private $socialMediaTable = "socialMedia";
+    private $unitTable = "unit";
 
     public function __construct($db)
     {
@@ -102,6 +109,96 @@ class GetMasterData
         return $data;
     }
 
+     //FUNCTION FOR GETTING LIST OF ROLES
+     public function getRoles()
+     {
+         $query = " SELECT roleType FROM $this->$roleTable ";
+         $exist = $this->conn->prepare($query);
+         $exist->execute();
+         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+             $data[]=$row;
+             
+         }
+         return $data;
+     }
+
+      //FUNCTION FOR GETTING LIST OF DOCUMENTS
+      public function getDocuments()
+      {
+          $query = " SELECT documentName FROM  $this->$documentTypeTable";
+          $exist = $this->conn->prepare($query);
+          $exist->execute();
+          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+              $data[]=$row;
+              
+          }
+          return $data;
+      }
+
+       //FUNCTION FOR GETTING LIST OF UNITS
+      public function getUnits()
+      {
+          $query = " SELECT  FROM unitName $this->$unitTable";
+          $exist = $this->conn->prepare($query);
+          $exist->execute();
+          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+              $data[]=$row;   
+          }
+          return $data;
+      }
+
+      //FUNCTION FOR GETTING LIST OF AMENITIES
+      public function getAmenities()
+      {
+          $query = " SELECT  FROM  $this->$amenitiesTable";
+          $exist = $this->conn->prepare($query);
+          $exist->execute();
+          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+              $data[]=$row;
+              
+          }
+          return $data;
+      }
+
+      //FUNCTION FOR GETTING LIST OF PROPERTY TYPE
+      public function getPropertyType()
+      {
+          $query = " SELECT propertyType FROM  $this->$propertyTypeTable";
+          $exist = $this->conn->prepare($query);
+          $exist->execute();
+          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+              $data[]=$row;
+              
+          }
+          return $data;
+      }
+
+       //FUNCTION FOR GETTING LIST OF CONFIGURATIONS
+       public function getConfiguration()
+       {
+           $query = " SELECT configurationType FROM  $this->$configurationTable";
+           $exist = $this->conn->prepare($query);
+           $exist->execute();
+           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+               $data[]=$row;
+               
+           }
+           return $data;
+       }
+
+        //FUNCTION FOR GETTING LIST OF SOCIAL MEDIA NAMES
+        public function getSocialMediaName()
+        {
+            $query = " SELECT  FROM SocialMediaName $this->$socialMediaTable";
+            $exist = $this->conn->prepare($query);
+            $exist->execute();
+            while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+                $data[]=$row;
+                
+            }
+            return $data;
+        }
+
     //function for getting list of states
     public function getStates( $countryId )
     {
@@ -127,6 +224,5 @@ class GetMasterData
         }
         return $data;
     }
-
 
 }

@@ -40,3 +40,33 @@ if($data->state && $data->country){
     echo json_encode(array("cityList"=> $cityList));
 
 }
+
+//DISPLAY LIST OF ROLES
+$roleList[] = $master->getRoles();
+echo json_encode(array("roleList"=> $roleList));
+
+//DISPLAY LIST OF DOCUMENTS
+$documentList[] = $master->getDocuments();
+echo json_encode(array("documentList"=> $documentList));
+
+//DISPLAY LIST OF AMENITIES
+$amenitiesList[] = $master->getAmenities();
+echo json_encode(array("documentList"=> $documentList));
+
+//DISPLAY LIST OF CONFIGURATION
+$configurationList[] = $master->getConfiguration();
+echo json_encode(array("documentList"=> $configurationList));
+
+//DISPLAY LIST OF UNIT TYPE
+$unitList[] = $master->getUnits();
+echo json_encode(array("documentList"=> $unitList));
+
+//DISPLAY LIST OF SOCIAL MEDIA NAMES
+$socialMediaNameList[] = $master->getSocialMediaName();
+echo json_encode(array("documentList"=> $socialMediaName));
+
+//DISPLAY LIST OF PROPERTY TYPE 
+$propertyTypeList[] = $master->getPropertyType();
+echo json_encode(array("documentList"=> $propertyTypeList));
+
+

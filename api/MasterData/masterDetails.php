@@ -22,7 +22,7 @@ $countryList[] = $master->getCountries();
 echo json_encode(array("countryList"=> $countryList));
 
 //DISPLAY LIST OF STATES
-if($data->country && !$data->state){
+if(!empty($data->country)){
     $countryId=$master->getCountryId($data->country);
     $stateList[] = $master->getStates($countryId);
     echo json_encode(array("stateList"=> $stateList));
@@ -30,7 +30,7 @@ if($data->country && !$data->state){
 }
 
 //DISPLAY LIST OF CITIES
-if($data->state && $data->country){
+if(!empty($data->state) && !empty($data->country)){
     $countryId=$master->getCountryId($data->country);
     $stateList[] = $master->getStates($countryId);
     echo json_encode(array("stateList"=> $stateList));
@@ -63,7 +63,7 @@ echo json_encode(array("documentList"=> $unitList));
 
 //DISPLAY LIST OF SOCIAL MEDIA NAMES
 $socialMediaNameList[] = $master->getSocialMediaName();
-echo json_encode(array("documentList"=> $socialMediaName));
+echo json_encode(array("documentList"=> $socialMediaNameList));
 
 //DISPLAY LIST OF PROPERTY TYPE 
 $propertyTypeList[] = $master->getPropertyType();

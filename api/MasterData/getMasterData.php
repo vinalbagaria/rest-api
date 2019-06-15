@@ -112,7 +112,7 @@ class GetMasterData
      //FUNCTION FOR GETTING LIST OF ROLES
      public function getRoles()
      {
-         $query = " SELECT roleType FROM $this->$roleTable ";
+         $query = " SELECT roleType FROM $this->roleTable ";
          $exist = $this->conn->prepare($query);
          $exist->execute();
          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -125,7 +125,7 @@ class GetMasterData
       //FUNCTION FOR GETTING LIST OF DOCUMENTS
       public function getDocuments()
       {
-          $query = " SELECT documentName FROM  $this->$documentTypeTable";
+          $query = " SELECT documentName FROM  $this->documentTypeTable";
           $exist = $this->conn->prepare($query);
           $exist->execute();
           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -138,7 +138,7 @@ class GetMasterData
        //FUNCTION FOR GETTING LIST OF UNITS
       public function getUnits()
       {
-          $query = " SELECT  FROM unitName $this->$unitTable";
+          $query = " SELECT unitName FROM $this->unitTable";
           $exist = $this->conn->prepare($query);
           $exist->execute();
           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -150,7 +150,7 @@ class GetMasterData
       //FUNCTION FOR GETTING LIST OF AMENITIES
       public function getAmenities()
       {
-          $query = " SELECT  FROM  $this->$amenitiesTable";
+          $query = " SELECT amenity FROM  $this->amenitiesTable";
           $exist = $this->conn->prepare($query);
           $exist->execute();
           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -163,7 +163,7 @@ class GetMasterData
       //FUNCTION FOR GETTING LIST OF PROPERTY TYPE
       public function getPropertyType()
       {
-          $query = " SELECT propertyType FROM  $this->$propertyTypeTable";
+          $query = " SELECT propertyType FROM  $this->propertyTypeTable";
           $exist = $this->conn->prepare($query);
           $exist->execute();
           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -176,7 +176,7 @@ class GetMasterData
        //FUNCTION FOR GETTING LIST OF CONFIGURATIONS
        public function getConfiguration()
        {
-           $query = " SELECT configurationType FROM  $this->$configurationTable";
+           $query = " SELECT configurationType FROM  $this->configurationTable";
            $exist = $this->conn->prepare($query);
            $exist->execute();
            while($row = $exist->fetch(PDO::FETCH_ASSOC)){
@@ -189,7 +189,7 @@ class GetMasterData
         //FUNCTION FOR GETTING LIST OF SOCIAL MEDIA NAMES
         public function getSocialMediaName()
         {
-            $query = " SELECT  FROM SocialMediaName $this->$socialMediaTable";
+            $query = " SELECT socialMediaName FROM $this->socialMediaTable";
             $exist = $this->conn->prepare($query);
             $exist->execute();
             while($row = $exist->fetch(PDO::FETCH_ASSOC)){

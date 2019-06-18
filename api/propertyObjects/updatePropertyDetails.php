@@ -1,12 +1,12 @@
 <?php
 
 include_once '../MasterData/getPropertyMasterData.php' ;
-
+include_once 'registerPropertyDetails.php' ;
 class UpdatePropertyDetails
 
 {
     public $conn ;
-
+    public $update ;
     public $userRoleId ;
     public $propertyName ;
     public $propertyStatus ;
@@ -29,13 +29,14 @@ class UpdatePropertyDetails
     public $noOfBalconies;
     public $master;
     public $roleType;
+    public $roleId ;
     private $propertyDetailsTable = "propertyDetails" ;
-
+    private $userRoleTable = "userRole" ;
     function __construct($db)
     {
         $this->conn = $db ;
         $this->master = new GetPropertyMasterData($db) ;
-
+        $this->update = new RegisterPropertyDetails($db) ;
     }
 
     function updatePropertyDetails()
@@ -48,14 +49,15 @@ class UpdatePropertyDetails
          WHERE userId = :userId" ;
         $stmt = $this->conn->prepare($query) ;
 
+        $this->roleId = $this->master->getRoleId($this->roleType) ;
         //SANITIZE DATA
         $this->userId = htmlspecialchars(strip_tags($this->userId)) ;
         $this->propertyName = htmlspecialchars(strip_tags($this->propertyName)) ;
         $this->propertyStatus = htmlspecialchars(strip_tags($this->propertyStatus))  ;
         $this->reraNo = htmlspecialchars(strip_tags($this->reraNo)) ;
-        $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
-        $this->userRoleId = $this->master->getRoleId($this->roleType) ;
-        $this->propertyTypeId = $this->master->getPropertyTypeId($this->propertyType) ;
+        $this->configurationId = htmlspecialchars(strip_tags($this->master->getConfigurationId($this->configurationType))) ;
+        $this->userRoleId = $this->getUserRoleId($this->userId,$this->roleId) ;
+        $this->propertyTypeId = htmlspecialchars(strip_tags($this->master->getPropertyTypeId($this->propertyType))) ;
         $this->floorNo = htmlspecialchars(strip_tags($this->floorNo)) ;
         $this->floors = htmlspecialchars(strip_tags($this->floors)) ;
         $this->carParking = htmlspecialchars(strip_tags($this->carParking)) ;
@@ -92,5 +94,24 @@ class UpdatePropertyDetails
         else
             return false ;
     }
+    function getUserRoleId()
+    {
+        $query = "SELECT userRoleId from $this->userRoleTable WHERE userId = :userId && roleId = :roleId " ;
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam( ":userId" , $this->userId ) ;
+        $stmt->bindParam( ":roleId" , $this->roleId ) ;
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if(!$data)
+        {
+            //Insert function call
+            $this->update->addUserRole($this->userId,$this->roleId) ;
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        echo json_encode(array("message" => $data["userRoleId"]));
+        return $data["userRoleId"] ;
+    }
+
 
 }

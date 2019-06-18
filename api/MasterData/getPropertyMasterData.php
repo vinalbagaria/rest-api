@@ -17,6 +17,8 @@ class GetPropertyMasterData
         $this->conn = $db;
         $this->updateMaster = new UpdateMasterData($db);
     }
+
+    // GET ROLE ID USING ROLETYPE
     function getRoleId($roleType)
     {
         $query = "SELECT roleId FROM $this->roleTable WHERE roleType = :roleType " ;
@@ -33,6 +35,7 @@ class GetPropertyMasterData
         return $existRole["roleId"] ;
     }
 
+    // GET CONFIGURATION ID USING CONFIGURATION TYPE
     function getConfigurationId($configurationType)
     {
         $query = "SELECT configurationId from $this->configurationTable WHERE configurationType = :configurationType";
@@ -50,6 +53,8 @@ class GetPropertyMasterData
         }
         return $existConfiguration["configurationId"];
     }
+
+    //GET PROPERTY TYPE ID USING PROPERTY TYPE
     function getPropertyTypeId($propertyType)
     {
         $query = "SELECT propertyTypeId from $this->propertyTypeTable WHERE propertyType = :propertyType";
@@ -68,6 +73,80 @@ class GetPropertyMasterData
         return $existPropertyType["propertyTypeId"];
     }
 
-    
+    //GET DOCUMENT TYPE ID USING DOCUMENT NAME
+    function getDocumentTypeId($documentName)
+    {
+        $query = "SELECT documentTypeId from $this->documentTypeTable WHERE documentName = :documentName";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":documentName",$documentName);
+        $stmt->execute();
+        $existDocumentName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$existDocumentName)
+        {
+            $this->updateMaster->addDocumentType($documentName);
+            $stmt->execute();
+            $existDocumentName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existDocumentName["propertyTypeId"];
+    }
+
+    //GET UNIT ID FROM UNIT NAME
+    function getUnitId($unitName)
+    {
+        $query = "SELECT unitId from $this->unitTable WHERE unitName = :unitName";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":unitName",$unitName);
+        $stmt->execute();
+        $existUnitName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$existUnitName)
+        {
+            $this->updateMaster->addDocumentType($unitName);
+            $stmt->execute();
+            $existUnitName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existUnitName["unitId"];
+    }
+
+    //GET  SOCIAL MEDIA ID USING SOCIAL MEDIA NAME
+    function getSocialMediaId($socialMediaName)
+    {
+        $query = "SELECT socialMediaId from $this->socialMediaTable WHERE socialMediaName  = :socialMediaName ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":socialMediaName ",$socialMediaName );
+        $stmt->execute();
+        $existSocialMediaName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$existSocialMediaName)
+        {
+            $this->updateMaster->addSocialMedia($socialMediaName);
+            $stmt->execute();
+            $existSocialMediaName=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existSocialMediaName["socialMediaId"];
+    }
+
+    //GET AMENITIY ID USING AMENITY NAME    
+    function getAmenityId($amenity)
+    {
+        $query = "SELECT  amenityId from $this->amenitiesTable WHERE amenity  = :amenity ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":amenity ",$amenity );
+        $stmt->execute();
+        $existAmenity=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$existAmenity)
+        {
+            $this->updateMaster->addAmenity($amenity);
+            $stmt->execute();
+            $existAmenity=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existAmenity["amenity"];
+    }
 }
 

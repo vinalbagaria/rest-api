@@ -9,6 +9,7 @@ class GetMasterData
     private $user = "user";
     private $userAddress = "userAddress";
     private $userCredentials = "userCredentials";
+    private $userRoleTable = " userRole ";
     private $countryTable = "country";
     private $stateTable = "state";
     private $cityTable = "city";

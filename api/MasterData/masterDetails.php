@@ -70,3 +70,4 @@ $propertyTypeList[] = $master->getPropertyType();
 echo json_encode(array("documentList"=> $propertyTypeList));
 
 
+

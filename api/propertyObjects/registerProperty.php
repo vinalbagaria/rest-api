@@ -2,7 +2,7 @@
 
 
 
-class registerProperty
+class RegisterProperty
 {
     private $propertyDetailsTable = "propertyDetails" ;
     private $propertyTypeTable = "propertyType" ;

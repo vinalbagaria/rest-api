@@ -18,6 +18,8 @@ $setMaster = new UpdateMasterData($db);
 $getPropertyMaster = new getPropertyMasterData($db);
 $data = json_decode(file_get_contents("php://input"));
 
+
+//FOR ADMIN  TO CHECK STATE AND COUNTRY ID
 if (
     !empty($data->state) &&
     !empty($data->countryId)
@@ -113,3 +115,5 @@ if
     else
         echo json_encode("cannot be inserted");
 }
+
+

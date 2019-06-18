@@ -52,6 +52,7 @@ class RegisterPropertyDetails
         
     }
 
+    //INSERTING NEW PROPERTY
     function registerPropertyDetails()
     {
         $query = "INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
@@ -140,8 +141,7 @@ class RegisterPropertyDetails
         echo json_encode(array("message" => $this->noOfBalconies));
 
 
-        // $this->developerId = htmlspecialchars(strip_tags($this->developerId));
-        // echo json_encode(array("message" => $this->developerId));
+        //BINDING PARAMS
         $stmt->bindParam(":propertyName" , $this->propertyName);
         $stmt->bindParam(":propertyStatus" , $this->propertyStatus);
         $stmt->bindParam(":reraNo" , $this->reraNo);

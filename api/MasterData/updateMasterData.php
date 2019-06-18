@@ -19,7 +19,7 @@ class UpdateMasterData
         $this->conn = $db;
     }
 
-    //user related
+    //ADDING NEW STATE
     function addState($state,$countryId)
     {
         $query = "INSERT INTO $this->stateTable(state , countryId) VALUES (:state , :countryId)";
@@ -34,6 +34,7 @@ class UpdateMasterData
             return false;
     }
 
+    //ADDING NEW CITY
     function addCity($city,$stateId)
     {
         $query4 = "INSERT INTO $this->cityTable(city,stateId) VALUES (:city,:stateId)";
@@ -46,6 +47,7 @@ class UpdateMasterData
             return false ;
     }
 
+    //ADDING NEW PINCODE
     function addPincode($pincode , $cityId)
     {
         $query = "INSERT INTO $this->pincodeTable(pincode,cityId) VALUES (:pincode,:cityId)";
@@ -58,7 +60,7 @@ class UpdateMasterData
             return false ;
     }
 
-    //property related
+    //ADDING NEW USER ROLE
     function addUserRole($roleType)
     {
         $query = "INSERT INTO $this->roleTable (roleType) values (:roleType)" ;
@@ -71,6 +73,7 @@ class UpdateMasterData
 
     }
 
+    //ADDING NEW AMENITY
     function addAmenity($amenity)
     {
         $query = "INSERT INTO $this->amenitiesTable(amenity) values (:amenity)" ;
@@ -80,9 +83,9 @@ class UpdateMasterData
             return true;
         else
             return false;
-
     }
 
+    //ADDING NEW DOCUMENT TYPE
     function addDocumentType($documentName)
     {
         $query = "INSERT INTO $this->documentTypeTable (documentName) values (:documentName)" ;
@@ -95,6 +98,7 @@ class UpdateMasterData
 
     }
 
+    //ADDING NEW PROPERTY TYPE
     function addPropertyType($propertyType)
     {
         $query = "INSERT INTO $this->propertyTypeTable (propertyType) VALUES (:propertyType)" ;
@@ -106,7 +110,7 @@ class UpdateMasterData
             return false ;
     }
 
-    //inserting new configuration
+    ////ADDING NEW CONFIGURATION TYPE
     function addConfigurationType($configurationType)
     {
         $query = "INSERT INTO $this->configurationTable (configurationType) VALUES (:configurationType)" ;
@@ -118,7 +122,7 @@ class UpdateMasterData
             return false;
     }
 
-    //inserting social media
+    ////ADDING NEW SOCIAL MEDIA
     function addSocialMedia($socialMediaName)
     {
         $query = "INSERT INTO $this->socialMediaTable (socialMediaName) VALUES (:socialMediaName)" ;
@@ -128,10 +132,9 @@ class UpdateMasterData
             return true ;
         else
             return false;
-
     }
 
-    //inserting unit
+    //ADDING NEW UNIT
     function addUnit($unitName)
     {
         $query = "INSERT INTO $this->unitTable (unitName) VALUES (:unitName)" ;
@@ -142,7 +145,5 @@ class UpdateMasterData
         else
             return false;
     }
-
-
 
 }

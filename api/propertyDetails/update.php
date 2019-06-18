@@ -57,7 +57,6 @@ if(
     if(!empty($data->noOfBalconies))
         $update->noOfBalconies =$data->noOfBalconies ;
 
-
     if($update->updatePropertyDetails())
     {
         echo json_encode("Updated Successfully");

@@ -29,7 +29,7 @@ class GetMasterData
         $this->updateMaster = new UpdateMasterData( $db ) ;
     }
 
-    //function for getting countryId
+    //FUNCTION FOR GETTING COUNTRYID
     public function getCountryId($country)
     {
         $query = "SELECT countryId FROM $this->countryTable WHERE country = :country";
@@ -41,7 +41,7 @@ class GetMasterData
         return $forCountry["countryId"];
     }
 
-    //function for getting stateId
+    //FUNCTION FOR GETTING STATEID
     public function getStateId($state , $countryId)
     {
         $query="SELECT stateId FROM $this->stateTable WHERE state = :state";
@@ -61,7 +61,7 @@ class GetMasterData
 
     }
 
-    //function for getting cityId
+    //FUNCTION FOR GETTING CITYID
     public function getCityId($city , $stateId)
     {
         $existCity = "SELECT cityId FROM  $this->cityTable WHERE city=:city";
@@ -80,7 +80,7 @@ class GetMasterData
         return $cityExist["cityId"];
     }
 
-    //function for getting pincodeId
+    //FUNCTION FOR GETTING PINCODEID
     public function getPincodeId( $pincode ,$cityId )
     {
         $query = "SELECT pincodeId FROM $this->pincodeTable WHERE pincode=:pincode" ;
@@ -98,7 +98,7 @@ class GetMasterData
         return $pincode["pincodeId"];
     }
 
-    //function for getting list of countries
+    //FUNCTION FOR GETTING LIST OF COUNTRIES
     public function getCountries()
     {
         $query = " SELECT country FROM $this->countryTable ";
@@ -200,7 +200,7 @@ class GetMasterData
             return $data;
         }
 
-    //function for getting list of states
+    //FUNCTION FOR GETTING LIST OF STATES
     public function getStates( $countryId )
     {
         $query = "SELECT state FROM $this->stateTable WHERE countryId = :countryId";
@@ -213,7 +213,7 @@ class GetMasterData
         return $data;
     }
 
-    //function for getting list of cities
+    //FUNCTION FOR GETTING LIST OF CITIES
     public function getCities( $stateId )
     {
         $query = " SELECT city FROM $this->cityTable WHERE stateId = :stateId ";

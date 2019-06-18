@@ -3,17 +3,15 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-// database connection will be here
-// include database and object files
 include_once '../config/database.php';
 include_once '../propertyObjects/getPropertyDetails.php';
 include_once '../userObjects/getUserDetails.php';
 
-// instantiate database and Login object
+//INSTANTIATE DATABASE OBJECT
 $database = new Database();
 $db = $database->getConnection();
 
-// initialize object
+//INITIALIZE PROPERTY DETAILS OBJECT
 $propertyDetails = new GetPropertyDetails($db);
 $data = json_decode(file_get_contents("php://input"));
 $userId = $data->userId;
@@ -21,7 +19,7 @@ echo json_encode(array("userId"=> $userId));
 
 
 
-//checking data is empty or not
+//CHECKING DATA IS EMPTY OR NOT
 if(
     !empty($data->userId)
 )
@@ -68,8 +66,6 @@ if(
     $ageOfProperty = $propertyDetails->getAgeOfProperty($propertyId);
     echo json_encode(array("ageOfProperty" =>$ageOfProperty ));
 }
-
-//if user inputs incomplete information
 else
 {
     http_response_code(400);

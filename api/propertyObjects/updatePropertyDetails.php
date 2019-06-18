@@ -39,6 +39,7 @@ class UpdatePropertyDetails
         $this->update = new RegisterPropertyDetails($db) ;
     }
 
+    //FUNCTION FOR UPDATING PROPERTY DETAILS
     function updatePropertyDetails()
     {
         $query = "UPDATE $this->propertyDetailsTable SET propertyName = :propertyName, propertyStatus = :propertyStatus,reraNo = :reraNo,
@@ -94,6 +95,8 @@ class UpdatePropertyDetails
         else
             return false ;
     }
+
+    //FUNCTION FOR GETTING USER ROLE ID
     function getUserRoleId()
     {
         $query = "SELECT userRoleId from $this->userRoleTable WHERE userId = :userId && roleId = :roleId " ;
@@ -102,9 +105,11 @@ class UpdatePropertyDetails
         $stmt->bindParam( ":roleId" , $this->roleId ) ;
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //IF userRoleId DOES NOT EXIST
         if(!$data)
         {
-            //Insert function call
+            //INSERT FUNCTION CALL
             $this->update->addUserRole($this->userId,$this->roleId) ;
             $stmt->execute();
             $data = $stmt->fetch(PDO::FETCH_ASSOC);

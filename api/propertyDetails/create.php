@@ -46,6 +46,8 @@ if(
     $register->floors = $data->floors ;
     $register->carParking = $data->carParking ;
     $register->furnishedType = $data->furnishedType ;
+
+    //CHECKING IF USER HAS INSERTED NULL(BY DEFAULT) VALUES
     if(!empty($data->facing))
         $register->facing = $data->facing ;
     if(!empty($data->ageOfProperty))

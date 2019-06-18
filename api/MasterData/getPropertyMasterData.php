@@ -68,5 +68,6 @@ class GetPropertyMasterData
         return $existPropertyType["propertyTypeId"];
     }
 
+    
 }
 

@@ -1,11 +1,13 @@
 <?php
 
 include_once '../MasterData/getPropertyMasterData.php' ;
+include_once 'getPropertyDetails.php';
 
 class RegisterPropertyDetails
 
 {
     private $propertyDetailsTable = "propertyDetails";
+    private $userRoleTable = "userRole";
 
     public $conn;
     public $userRoleId;
@@ -28,21 +30,35 @@ class RegisterPropertyDetails
     public $noOfBathrooms;
     public $noOfBalconies;
     public $master;
+    public $findMaster;
     public $roleType;
-
+    public $roleId;
 
     function __construct($db)
     {
         $this->conn = $db;
         $this->master = new GetPropertyMasterData($db);
-
+        $this->findMaster = new GetPropertyDetails($db);
     }
+
+    //INSERTING INTO USERROLE TABLE
+    function addUserRole($userId,$roleId)
+    {
+        $query = "INSERT INTO $this->userRoleTable(userId,roleId) VALUES (:userId,:roleId)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":userId",$userId);
+        $stmt->bindParam(":roleId",$roleId);
+        $stmt->execute();
+        
+    }
+
     function registerPropertyDetails()
     {
         $query = "INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
         :configurationId,:userId,:userRoleId,:floorNo,:floors,:carParking,:furnishedType,:ageOfProperty,:description,
        :possessionDate,:facing,:noOfBathrooms,:noOfBalconies)";
 
+        
         $stmt = $this->conn->prepare($query) ;
 
         $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
@@ -73,7 +89,17 @@ class RegisterPropertyDetails
         echo json_encode(array("message" => $this->userId));
 
 
-        $this->userRoleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
+
+        $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
+        echo json_encode(array("message" => $this->roleId));
+
+
+        $this->addUserRole($this->userId,$this->roleId);
+
+        
+        echo json_encode(array("message" => "neww start"));
+        
+        $this->userRoleId = htmlspecialchars(strip_tags(($this->findMaster)->getUserRoleId($this->userId)));
         echo json_encode(array("message" => $this->userRoleId));
 
         $this->floors = htmlspecialchars(strip_tags($this->floors));

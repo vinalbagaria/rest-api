@@ -23,49 +23,49 @@ echo json_encode(array("userId"=> $userId));
 
 //checking data is empty or not
 if(
-    !empty($data->userId && $data->propertyId) 
+    !empty($data->userId)
 )
 {
     $propertyId = $propertyDetails->getPropertyId($data->userId);
     echo json_encode(array("propertyId" =>$propertyId ));
 
-    $propertyName = $propertyDetails->getPropertyName($data->propertyId);
+    $propertyName = $propertyDetails->getPropertyName($propertyId);
     echo json_encode(array("propertyName" =>$propertyName ));
 
-    $propertyStatus = $propertyDetails->getPropertyStatus($data->propertyId);
+    $propertyStatus = $propertyDetails->getPropertyStatus($propertyId);
     echo json_encode(array("propertyStatus" =>$propertyStatus ));
 
-    $reraNo = $propertyDetails->getReraNo($data->propertyId);
+    $reraNo = $propertyDetails->getReraNo($propertyId);
     echo json_encode(array("reraNo" =>$reraNo ));
 
-    $floorNo = $propertyDetails->getFloorNo($data->propertyId);
+    $floorNo = $propertyDetails->getFloorNo($propertyId);
     echo json_encode(array("floorNo" =>$floorNo ));
 
-    $floors = $propertyDetails->getFloors($data->propertyId);
+    $floors = $propertyDetails->getFloors($propertyId);
     echo json_encode(array("floors" =>$floors ));
 
-    $facing = $propertyDetails->getFacing($data->propertyId);
+    $facing = $propertyDetails->getFacing($propertyId);
     echo json_encode(array("facing" =>$facing ));
 
-    $noOfBathrooms = $propertyDetails->getBathrooms($data->propertyId);
+    $noOfBathrooms = $propertyDetails->getBathrooms($propertyId);
     echo json_encode(array("noOfBathrooms" =>$noOfBathrooms ));
 
-    $noOfBalconies = $propertyDetails->getBalconies($data->propertyId);
+    $noOfBalconies = $propertyDetails->getBalconies($propertyId);
     echo json_encode(array("noOfBalconies" =>$noOfBalconies ));
 
-    $carParking = $propertyDetails->getCarParking($data->propertyId);
+    $carParking = $propertyDetails->getCarParking($propertyId);
     echo json_encode(array("carParking" =>$carParking ));
 
-    $possessionDate = $propertyDetails->getPossessionDate($data->propertyId);
+    $possessionDate = $propertyDetails->getPossessionDate($propertyId);
     echo json_encode(array("possessionDate" =>$possessionDate ));
 
-    $furnishedType = $propertyDetails->getFurnishedType($data->propertyId);
+    $furnishedType = $propertyDetails->getFurnishedType($propertyId);
     echo json_encode(array("furnishedType" =>$furnishedType ));
 
-    $description = $propertyDetails->getDescription($data->propertyId);
+    $description = $propertyDetails->getDescription($propertyId);
     echo json_encode(array("description" =>$description ));
 
-    $ageOfProperty = $propertyDetails->getAgeOfProperty($data->propertyId);
+    $ageOfProperty = $propertyDetails->getAgeOfProperty($propertyId);
     echo json_encode(array("ageOfProperty" =>$ageOfProperty ));
 }
 

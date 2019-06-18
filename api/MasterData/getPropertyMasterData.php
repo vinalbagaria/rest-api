@@ -1,7 +1,7 @@
 <?php
 
 include_once 'updateMasterData.php';
-class getPropertyMasterData
+class GetPropertyMasterData
 {
     private $conn ;
     private $roleTable = "role" ;
@@ -51,6 +51,24 @@ class getPropertyMasterData
         }
         return $existConfiguration["configurationId"];
     }
+    function getPropertyTypeId($propertyType)
+    {
+        $query = "SELECT propertyTypeId from $this->propertyTypeTable WHERE propertyType = :propertyType";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":propertyType",$propertyType);
+        $stmt->execute();
+        $existPropertyType=$stmt->fetch(PDO::FETCH_ASSOC);
 
+        if(!$existPropertyType)
+        {
+            $this->updateMaster->addPropertyType($propertyType);
+            $stmt->execute();
+            $existPropertyType=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existPropertyType["propertyTypeId"];
+    }
+
+    
 }
 

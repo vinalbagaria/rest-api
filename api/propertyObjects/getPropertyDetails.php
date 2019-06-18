@@ -162,14 +162,23 @@ include_once 'registerProperty.php';
        //FUNCTION TO GET PROPERTY DESCRIPTION BASED ON PROPERTY ID
        public function getDescription($propertyId)
        {
-           $query = " SELECT description from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
+           $query = " SELECT description from $this->propertyDetailsTable WHERE propertyId = :propertyId";
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
            $data = $stat->fetch(PDO :: FETCH_ASSOC);
            return $data["description"];
        }
 
-
+       // FUNCTION TO GET USERROLEID BASED ON USERID
+       public function getUserRoleId($userId)
+       {
+           $query = " SELECT userRoleId from $this->userRoleTable WHERE userId=:userId";
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindParam(":userId",$userId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO::FETCH_ASSOC);
+           return $data["userRoleId"];
+       }
 
  }

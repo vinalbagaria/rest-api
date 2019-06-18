@@ -13,6 +13,7 @@ class UpdateMasterData
     private $propertyTypeTable = "propertyType" ;
     private $socialMediaTable = "socialMedia";
     private $unitTable = "unit";
+   
     public function __construct($db)
     {
         $this->conn = $db;

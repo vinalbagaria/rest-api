@@ -41,7 +41,7 @@ if (
 //}
 
 if (
-!empty($data->amenity)
+    !empty($data->amenity)
 ) {
     if ($setMaster->addAmenity($data->amenity))
         echo json_encode("Amenity uploaded successfully");
@@ -50,7 +50,7 @@ if (
 }
 
 if (
-!empty($data->documentName)
+    !empty($data->documentName)
 ) {
     if ($setMaster->addDocumentType($data->documentName))
         echo json_encode("Document uploaded successfully");
@@ -59,7 +59,7 @@ if (
 }
 
 if (
-!empty($data->propertyType)
+    !empty($data->propertyType)
 ) {
     if ($setMaster->addPropertyType($data->propertyType))
         echo json_encode("Property Type is inserted successfully");
@@ -77,7 +77,7 @@ if (
 //}
 
 if (
-!empty($data->socialMediaName)
+    !empty($data->socialMediaName)
 ) {
     if ($setMaster->addSocialMedia($data->socialMediaName))
         echo json_encode("Social Media Type is inserted successfully");
@@ -86,7 +86,7 @@ if (
 }
 
 if (
-!empty($data->unitName)
+    !empty($data->unitName)
 ) {
     if ($setMaster->addUnit($data->unitName))
         echo json_encode("Unit Type is inserted successfully");
@@ -96,7 +96,7 @@ if (
 
 if
 (
-!empty($data->roleType)
+    !empty($data->roleType)
 ){
     $roleId = $getPropertyMaster->getRoleId($data->roleType);
     if ($roleId)
@@ -107,7 +107,7 @@ if
 
 if
 (
-!empty($data->configurationType)
+    !empty($data->configurationType)
 ){
     $configurationId = $getPropertyMaster->getConfigurationId($data->configurationType);
     if ($configurationId)

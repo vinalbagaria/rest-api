@@ -51,5 +51,23 @@ class getPropertyMasterData
         return $existConfiguration["configurationId"];
     }
 
+    function getPropertyTypeId($propertyType)
+    {
+        $query = "SELECT propertyTypeId from $this->propertyTypeTable WHERE propertyType = :propertyType";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":propertyType",$propertyType);
+        $stmt->execute();
+        $existPropertyTypeId = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$existPropertyTypeId)
+        {
+            $this->updateMaster->addPropertyType($propertyType);
+            $stmt->execute();
+            $existPropertyTypeId=$stmt->fetch(PDO::FETCH_ASSOC);
+
+        }
+        return $existPropertyTypeId["propertyTypeId"];
+    }
+
 }
 

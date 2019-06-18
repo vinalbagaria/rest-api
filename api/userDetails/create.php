@@ -23,7 +23,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if (
-    !empty($data->firstName) &&
+    !empty($data->firstName) && 
     !empty($data->lastName) &&
     !empty($data->contactNo) &&
     !empty($data->emailId) &&
@@ -37,7 +37,7 @@ if (
     !empty($data->latitude) &&
     !empty($data->longitude) &&
     !empty($data->placeId) &&
-
+    
     !empty($data->password)
 ) {
 
@@ -46,7 +46,7 @@ if (
     $user->lastName=$data->lastName;
     $user->contactNo=$data->contactNo;
     $user->emailId=$data->emailId;
-
+   
     $user->country=$data->country;
     $user->state=$data->state;
     $user->city=$data->city;

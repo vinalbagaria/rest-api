@@ -5,7 +5,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../propertyObjects/registerPropertyDetails.php';
+include_once '../propertyObjects/updatePropertyDetails.php';
 include_once '../config/database.php' ;
 $database = new Database();
 $db = $database->getConnection();
@@ -32,38 +32,39 @@ if(
     !empty($data->noOfBalconies) &&
     !empty($data->reraNo)
 ){
-    $register = new RegisterPropertyDetails($db) ;
-    $register->propertyName = $data->propertyName ;
-    $register->propertyStatus = $data->propertyStatus ;
-    $register->propertyType = $data->propertyType ;
-    $register->configurationType = $data->configurationType ;
-    $register->reraNo = $data->reraNo;
-    $register->userId = $data->userId ;
-    $register->roleType = $data->roleType ;
-    $register->floorNo = $data->floorNo ;
-    $register->floors = $data->floors ;
-    $register->carParking = $data->carParking ;
-    $register->furnishedType = $data->furnishedType ;
+    $update = new UpdatePropertyDetails($db) ;
+    $update->propertyName = $data->propertyName ;
+    $update->propertyStatus = $data->propertyStatus ;
+    $update->propertyType = $data->propertyType ;
+    $update->configurationType = $data->configurationType ;
+    $update->reraNo = $data->reraNo;
+    $update->userId = $data->userId ;
+    $update->roleType = $data->roleType ;
+    $update->floorNo = $data->floorNo ;
+    $update->floors = $data->floors ;
+    $update->carParking = $data->carParking ;
+    $update->furnishedType = $data->furnishedType ;
     if(!empty($data->facing))
-        $register->facing = $data->facing ;
+        $update->facing = $data->facing ;
     if(!empty($data->ageOfProperty))
-        $register->ageOfProperty = $data->ageOfProperty ;
+        $update->ageOfProperty = $data->ageOfProperty ;
     if(!empty($data->description))
-        $register->description= $data->description ;
+        $update->description= $data->description ;
     if(!empty($data->possessionDate))
-        $register->possessionDate = $data->possessionDate ;
+        $update->possessionDate = $data->possessionDate ;
     if(!empty($data->noOfBathrooms))
-        $register->noOfBathrooms  = $data->noOfBathrooms ;
+        $update->noOfBathrooms  = $data->noOfBathrooms ;
     if(!empty($data->noOfBalconies))
-        $register->noOfBalconies =$data->noOfBalconies ;
+        $update->noOfBalconies =$data->noOfBalconies ;
 
-    if($register->registerPropertyDetails())
+
+    if($update->updatePropertyDetails())
     {
-        echo json_encode(array("message" => "Updated Successfully"));
+        echo json_encode("Updated Successfully");
     }
     else
-        echo json_encode(array("message" => "Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }else
 {
-    echo json_encode(array("message" =>"Incomplete Data"));
+    echo json_encode("Incomplete Data");
 }

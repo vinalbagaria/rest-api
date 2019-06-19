@@ -7,24 +7,23 @@ include_once '../config/database.php';
 include_once '../propertyObjects/getPropertyDetails.php';
 include_once '../userObjects/getUserDetails.php';
 
-//INSTANTIATE DATABASE OBJECT
-$database = new Database();
-$db = $database->getConnection();
-
-//INITIALIZE PROPERTY DETAILS OBJECT
-$propertyDetails = new GetPropertyDetails($db);
 $data = json_decode(file_get_contents("php://input"));
 $userId = $data->userId;
 echo json_encode(array("userId"=> $userId));
-
-
 
 //CHECKING DATA IS EMPTY OR NOT
 if(
     !empty($data->userId)
 )
 {
+    //INSTANTIATE DATABASE OBJECT
+    $database = new Database();
+    $db = $database->getConnection();
+
+    //INITIALIZE PROPERTY DETAILS OBJECT
+    $propertyDetails = new GetPropertyDetails($db);
     $propertyId = $propertyDetails->getPropertyId($data->userId);
+
     echo json_encode(array("propertyId" =>$propertyId ));
 
     $propertyName = $propertyDetails->getPropertyName($propertyId);

@@ -13,10 +13,7 @@ include_once '../config/database.php';
 // instantiate product object
 include_once '../userObjects/register.php';
 
-$database = new Database();
-$db = $database->getConnection();
 
-$user = new Register($db);
 
 //GET POSTED DATA
 $data = json_decode(file_get_contents("php://input"));
@@ -40,6 +37,10 @@ if (
     
     !empty($data->password)
 ) {
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $user = new Register($db);
 
     // SET PRODUCT PROPERTY VALUES
     $user->firstName = $data->firstName;

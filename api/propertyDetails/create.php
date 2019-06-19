@@ -7,10 +7,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../propertyObjects/registerPropertyDetails.php';
 include_once '../config/database.php' ;
-$database = new Database();
-$db = $database->getConnection();
-
-$property = new registerPropertyDetails($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -34,6 +30,10 @@ if(
     !empty($data->noOfBalconies) &&
     !empty($data->reraNo)
 ){
+    $database = new Database();
+    $db = $database->getConnection();
+
+
     $register = new RegisterPropertyDetails($db) ;
     $register->propertyName = $data->propertyName ;
     $register->propertyStatus = $data->propertyStatus ;

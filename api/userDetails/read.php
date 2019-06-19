@@ -6,11 +6,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../config/database.php';
 include_once '../userObjects/login.php';
 
-// INSTANTIATE DATABASE
-$database = new Database();
-$db = $database->getConnection();
 
-$user = new Login($db);
 $data = json_decode(file_get_contents("php://input"));
 
 
@@ -21,7 +17,11 @@ if(
     !empty($data->password)
 )
 {
+    // INSTANTIATE DATABASE
+    $database = new Database();
+    $db = $database->getConnection();
 
+    $user = new Login($db);
     //checkLogin function to validate the user
     if($user->checkLogin($data->email,$data->password))
     {

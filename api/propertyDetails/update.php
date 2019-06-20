@@ -5,10 +5,10 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../propertyObjects/updatePropertyDetails.php';
-include_once '../config/database.php' ;
-$database = new Database();
-$db = $database->getConnection();
+require_once '../propertyObjects/updatePropertyDetails.php';
+require_once '../config/database.php' ;
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 
 $data = json_decode(file_get_contents("php://input"));
 

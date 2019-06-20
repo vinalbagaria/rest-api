@@ -1,6 +1,6 @@
 <?php
 
-include_once 'updateMasterData.php';
+require_once 'updateMasterData.php';
 class GetPropertyMasterData
 {
     private $conn ;
@@ -18,6 +18,8 @@ class GetPropertyMasterData
         $this->conn = $db;
         $this->updateMaster = new UpdateMasterData($db);
     }
+
+    //FUNCTION TO GET ROLE ID
     function getRoleId($roleType)
     {
         $query = "SELECT roleId FROM $this->roleTable WHERE roleType = :roleType " ;
@@ -34,6 +36,7 @@ class GetPropertyMasterData
         return $existRole["roleId"] ;
     }
 
+    //FUNCTION TO GET CONFIGURATION ID
     function getConfigurationId($configurationType)
     {
         $query = "SELECT configurationId from $this->configurationTable WHERE configurationType = :configurationType";
@@ -51,6 +54,8 @@ class GetPropertyMasterData
         }
         return $existConfiguration["configurationId"];
     }
+
+    //FUNCTION TO GET PROPERTY TYPE ID
     function getPropertyTypeId($propertyType)
     {
         $query = "SELECT propertyTypeId from $this->propertyTypeTable WHERE propertyType = :propertyType";

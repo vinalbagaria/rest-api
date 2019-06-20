@@ -1,7 +1,7 @@
 <?php
 
-include_once '../MasterData/getPropertyMasterData.php' ;
-include_once 'getPropertyDetails.php';
+require_once '../MasterData/getPropertyMasterData.php' ;
+require_once 'getPropertyDetails.php';
 
 class RegisterPropertyDetails
 
@@ -88,8 +88,6 @@ class RegisterPropertyDetails
         $this->userId = htmlspecialchars(strip_tags($this->userId));
         echo json_encode(array("message" => $this->userId));
 
-
-
         $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
         echo json_encode(array("message" => $this->roleId));
 
@@ -116,22 +114,14 @@ class RegisterPropertyDetails
         $this->ageOfProperty = htmlspecialchars(strip_tags($this->ageOfProperty));
         echo json_encode(array("message" => $this->ageOfProperty));
 
-
-        
-
         $this->description = htmlspecialchars(strip_tags($this->description));
         echo json_encode(array("message" => $this->description));
-
-
-
 
         $this->possessionDate = htmlspecialchars(strip_tags($this->possessionDate));
         echo json_encode(array("message" => $this->possessionDate));
 
-
         $this->facing = htmlspecialchars(strip_tags($this->facing));
         echo json_encode(array("message" => $this->facing));
-
 
         $this->noOfBathrooms = htmlspecialchars(strip_tags($this->noOfBathrooms));
         echo json_encode(array("message" => $this->noOfBathrooms));

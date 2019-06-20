@@ -5,13 +5,13 @@ header("Content-Type: application/json; charset=UTF-8");
 
 // database connection will be here
 // include database and object files
-include_once '../config/database.php';
-include_once '../propertyObjects/getPropertyDetails.php';
-include_once '../userObjects/getUserDetails.php';
+require_once '../config/database.php';
+require_once '../propertyObjects/getPropertyDetails.php';
+require_once '../userObjects/getUserDetails.php';
 
 // instantiate database and Login object
-$database = new Database();
-$db = $database->getConnection();
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 
 // initialize object
 $propertyDetails = new GetPropertyDetails($db);

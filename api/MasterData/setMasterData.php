@@ -7,12 +7,12 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once 'getPropertyMasterData.php';
-include_once 'updateMasterData.php';
+require_once 'getPropertyMasterData.php';
+require_once 'updateMasterData.php';
 include '../config/database.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 
 $setMaster = new UpdateMasterData($db);
 $getPropertyMaster = new getPropertyMasterData($db);

@@ -5,13 +5,12 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../propertyObjects/registerPropertyDetails.php';
-include_once '../config/database.php' ;
-$database = new Database();
-$db = $database->getConnection();
+require_once '../propertyObjects/registerPropertyDetails.php';
+require_once '../config/database.php' ;
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 
 $property = new registerPropertyDetails($db);
-
 $data = json_decode(file_get_contents("php://input"));
 
 //CHECKING DATA IS EMPTY OR NOT
@@ -46,6 +45,7 @@ if(
     $register->floors = $data->floors ;
     $register->carParking = $data->carParking ;
     $register->furnishedType = $data->furnishedType ;
+    
     if(!empty($data->facing))
         $register->facing = $data->facing ;
     if(!empty($data->ageOfProperty))
@@ -60,8 +60,6 @@ if(
         $register->noOfBalconies =$data->noOfBalconies ;
 
     //INSERTING INTO USER ROLE TABLE
-   
-
     if($register->registerPropertyDetails())
     {
         echo json_encode(array("message" => "Updated Successfully"));

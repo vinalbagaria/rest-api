@@ -1,6 +1,6 @@
 <?php
 
-include_once 'registerProperty.php';
+require_once 'registerProperty.php';
  class GetPropertyDetails
  {
     private $conn ;
@@ -21,10 +21,10 @@ include_once 'registerProperty.php';
     public function getPropertyId($userId)
     {
         $query = " SELECT propertyId from $this->propertyDetailsTable where userId = :userId";
-        $stat = $this->conn->prepare($query);
-        $stat->bindparam(":userId" , $userId);
-        $stat->execute();
-        $data = $stat->fetch(PDO :: FETCH_ASSOC);
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindparam(":userId" , $userId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO :: FETCH_ASSOC);
         return $data["propertyId"];
     }
 
@@ -32,20 +32,20 @@ include_once 'registerProperty.php';
     public function getPropertyName($propertyId)
     {
         $query = " SELECT propertyName from $this->propertyDetailsTable where propertyId = :propertyId";
-        $stat = $this->conn->prepare($query);
-        $stat->bindparam(":propertyId" , $propertyId);
-        $stat->execute();
-        $data = $stat->fetch(PDO :: FETCH_ASSOC);
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindparam(":propertyId" , $propertyId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO :: FETCH_ASSOC);
         return $data["propertyName"];
     }
      //FUNCTION TO GET PROPERTY STATUS BASED ON PROPERTY ID
      public function getPropertyStatus($propertyId)
      {
          $query = " SELECT propertyStatus from $this->propertyDetailsTable where propertyId = :propertyId";
-         $stat = $this->conn->prepare($query);
-         $stat->bindparam(":propertyId" , $propertyId);
-         $stat->execute();
-         $data = $stat->fetch(PDO :: FETCH_ASSOC);
+         $stmt = $this->conn->prepare($query);
+         $stmt->bindparam(":propertyId" , $propertyId);
+         $stmt->execute();
+         $data = $stmt->fetch(PDO :: FETCH_ASSOC);
          return $data["propertyStatus"];
      }
 
@@ -53,10 +53,10 @@ include_once 'registerProperty.php';
       public function getReraNo($propertyId)
       {
           $query = " SELECT reraNo from $this->propertyDetailsTable where propertyId = :propertyId";
-          $stat = $this->conn->prepare($query);
-          $stat->bindparam(":propertyId" , $propertyId);
-          $stat->execute();
-          $data = $stat->fetch(PDO :: FETCH_ASSOC);
+          $stmt = $this->conn->prepare($query);
+          $stmt->bindparam(":propertyId" , $propertyId);
+          $stmt->execute();
+          $data = $stmt->fetch(PDO :: FETCH_ASSOC);
           return $data["reraNo"];
       }
 
@@ -64,10 +64,10 @@ include_once 'registerProperty.php';
        public function getFloorNo($propertyId)
        {
            $query = " SELECT floorNo from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["floorNo"];
        }
 
@@ -75,10 +75,10 @@ include_once 'registerProperty.php';
        public function getFloorS($propertyId)
        {
            $query = " SELECT floorS from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["floorS"];
        }
        
@@ -86,10 +86,10 @@ include_once 'registerProperty.php';
        public function getFacing($propertyId)
        {
            $query = " SELECT facing from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["facing"];
        }
 
@@ -97,10 +97,10 @@ include_once 'registerProperty.php';
        public function getBathrooms($propertyId)
        {
            $query = " SELECT noOfBathrooms from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["noOfBathrooms"];
        }
 
@@ -108,21 +108,21 @@ include_once 'registerProperty.php';
        public function getBalconies($propertyId)
        {
            $query = " SELECT noOfBalconies from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["noOfBalconies"];
        }
 
-       //FUNCTION TO GET PROPERTY CAR PARKING STATUS BASED ON PROPERTY ID
+       //FUNCTION TO GET PROPERTY CAR PARKING stmtUS BASED ON PROPERTY ID
        public function getCarParking($propertyId)
        {
            $query = " SELECT carParking from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["carParking"];
        }
 
@@ -130,10 +130,10 @@ include_once 'registerProperty.php';
        public function getPossessionDate($propertyId)
        {
            $query = " SELECT possessionDate from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["possessionDate"];
        }
 
@@ -141,10 +141,10 @@ include_once 'registerProperty.php';
        public function getAgeOfProperty($propertyId)
        {
            $query = " SELECT ageOfProperty from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["ageOfProperty"];
        }
 
@@ -152,10 +152,10 @@ include_once 'registerProperty.php';
        public function getFurnishedType($propertyId)
        {
            $query = " SELECT furnishedType from $this->propertyDetailsTable where propertyId = :propertyId";
-           $stat = $this->conn->prepare($query);
-           $stat->bindparam(":propertyId" , $propertyId);
-           $stat->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindparam(":propertyId" , $propertyId);
+           $stmt->execute();
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["furnishedType"];
        }
 
@@ -166,7 +166,7 @@ include_once 'registerProperty.php';
            $stmt = $this->conn->prepare($query);
            $stmt->bindparam(":propertyId" , $propertyId);
            $stmt->execute();
-           $data = $stat->fetch(PDO :: FETCH_ASSOC);
+           $data = $stmt->fetch(PDO :: FETCH_ASSOC);
            return $data["description"];
        }
 

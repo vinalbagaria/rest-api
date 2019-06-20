@@ -5,13 +5,12 @@ header("Content-Type: application/json; charset=UTF-8");
 
 // database connection will be here
 // include database and object files
-include_once '../config/database.php';
-include_once '../userObjects/login.php';
+require_once '../config/database.php';
+require_once '../userObjects/login.php';
 
 // instantiate database and Login object
-$database = new Database();
-$db = $database->getConnection();
-
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 // initialize object
 $user = new Login($db);
 $data = json_decode(file_get_contents("php://input"));

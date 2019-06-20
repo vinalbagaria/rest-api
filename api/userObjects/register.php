@@ -1,5 +1,5 @@
 <?php
-include_once '../MasterData/getMasterData.php';
+require_once '../MasterData/getMasterData.php';
 
 class Register
 {

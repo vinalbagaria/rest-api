@@ -8,13 +8,13 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // get database connection
-include_once '../config/database.php';
+require_once '../config/database.php';
 
 // instantiate product object
-include_once '../userObjects/register.php';
+require_once '../userObjects/register.php';
 
-$database = new Database();
-$db = $database->getConnection();
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
 
 $user = new Register($db);
 

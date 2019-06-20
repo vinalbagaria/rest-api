@@ -1,7 +1,7 @@
 <?php
 
 
-include_once 'updateMasterData.php';
+require_once 'updateMasterData.php';
 
 class GetMasterData
 {
@@ -105,7 +105,7 @@ class GetMasterData
         $exist = $this->conn->prepare($query);
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-            $data[]=$row;
+            $data[]=$row["country"];
         }
         return $data;
     }

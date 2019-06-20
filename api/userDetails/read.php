@@ -8,22 +8,19 @@ header("Content-Type: application/json; charset=UTF-8");
 require_once '../config/database.php';
 require_once '../userObjects/login.php';
 
-// instantiate database and Login object
-$instance = ConnectDb::getInstance();
-$db = $instance->getConnection();
-// initialize object
-$user = new Login($db);
 $data = json_decode(file_get_contents("php://input"));
 
-
-
-//checking data is empty or not
+//CHECKING DATA IS EMPTY OR NOT
 if(
     !empty($data->email) &&
     !empty($data->password)
 )
 {
+    // INSTANTIATE DATABASE
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
 
+    $user = new Login($db);
     //checkLogin function to validate the user
     if($user->checkLogin($data->email,$data->password))
     {

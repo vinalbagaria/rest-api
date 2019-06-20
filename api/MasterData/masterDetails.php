@@ -10,13 +10,11 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once '../config/database.php';
 require_once 'getMasterData.php';
 
+$data = json_decode(file_get_contents("php://input"));
 
 $instance = ConnectDb::getInstance();
 $db = $instance->getConnection();
-
 $master = new GetMasterData($db);
-$data = json_decode(file_get_contents("php://input"));
-
 
 //DISPLAY LIST OF COUNTRIES
 $countryList[] = $master->getCountries();
@@ -41,7 +39,6 @@ if(!empty($data->state) && !empty($data->country)){
     echo json_encode(array("cityList"=> $cityList));
 
 }
-
 //DISPLAY LIST OF ROLES
 $roleList[] = $master->getRoles();
 echo json_encode(array("roleList"=> $roleList));

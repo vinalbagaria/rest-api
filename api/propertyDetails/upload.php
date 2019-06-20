@@ -80,6 +80,8 @@ if(is_uploaded_file($_FILES["property_document"]["tmp_name"]  && @$_POST["userId
     $upload_dir = "uploads/".$documentName;
     $userId = $_POST["userId"] ;
 
-    $propertyDetails->getPropertyId()
-    $query = "INSERT INTO doucments ";
+    $propertyId = $propertyDetails->getPropertyId($userId) ;
+    $documentTypeId = $
+
+    // $query = "INSERT INTO documents  ";
 }

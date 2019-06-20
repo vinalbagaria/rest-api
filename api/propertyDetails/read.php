@@ -9,24 +9,23 @@ require_once '../config/database.php';
 require_once '../propertyObjects/getPropertyDetails.php';
 require_once '../userObjects/getUserDetails.php';
 
-// instantiate database and Login object
-$instance = ConnectDb::getInstance();
-$db = $instance->getConnection();
-
-// initialize object
-$propertyDetails = new GetPropertyDetails($db);
 $data = json_decode(file_get_contents("php://input"));
 $userId = $data->userId;
 echo json_encode(array("userId"=> $userId));
 
-
-
-//checking data is empty or not
+//CHECKING DATA IS EMPTY OR NOT
 if(
     !empty($data->userId)
 )
 {
+    // instantiate database and Login object
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+
+    // initialize object
+    $propertyDetails = new GetPropertyDetails($db);
     $propertyId = $propertyDetails->getPropertyId($data->userId);
+
     echo json_encode(array("propertyId" =>$propertyId ));
 
     $propertyName = $propertyDetails->getPropertyName($propertyId);
@@ -68,8 +67,6 @@ if(
     $ageOfProperty = $propertyDetails->getAgeOfProperty($propertyId);
     echo json_encode(array("ageOfProperty" =>$ageOfProperty ));
 }
-
-//if user inputs incomplete information
 else
 {
     http_response_code(400);

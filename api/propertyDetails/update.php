@@ -1,14 +1,12 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods:PUT");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require_once '../propertyObjects/updatePropertyDetails.php';
 require_once '../config/database.php' ;
-$instance = ConnectDb::getInstance();
-$db = $instance->getConnection();
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -32,6 +30,9 @@ if(
     !empty($data->noOfBalconies) &&
     !empty($data->reraNo)
 ){
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    
     $update = new UpdatePropertyDetails($db) ;
     $update->propertyName = $data->propertyName ;
     $update->propertyStatus = $data->propertyStatus ;
@@ -56,7 +57,6 @@ if(
         $update->noOfBathrooms  = $data->noOfBathrooms ;
     if(!empty($data->noOfBalconies))
         $update->noOfBalconies =$data->noOfBalconies ;
-
 
     if($update->updatePropertyDetails())
     {

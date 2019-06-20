@@ -13,15 +13,10 @@ require_once '../config/database.php';
 // instantiate product object
 require_once '../userObjects/register.php';
 
-$instance = ConnectDb::getInstance();
-$db = $instance->getConnection();
-
-$user = new Register($db);
-
-// get posted data
+//GET POSTED DATA
 $data = json_decode(file_get_contents("php://input"));
 
-// make sure data is not empty
+// CHECKING DATA IS EMPTY OR NOT
 if (
     !empty($data->firstName) && 
     !empty($data->lastName) &&
@@ -40,8 +35,12 @@ if (
     
     !empty($data->password)
 ) {
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
 
-    // set product property values
+    $user = new Register($db);
+
+    // SET PRODUCT PROPERTY VALUES
     $user->firstName = $data->firstName;
     $user->lastName=$data->lastName;
     $user->contactNo=$data->contactNo;
@@ -64,24 +63,23 @@ if (
         // set response code - 201 created
         http_response_code(201);
 
-        // tell the user
+
         echo json_encode(array("message" => "user was created."));
-    } // if unable to create the product, tell the user
+    }
     else {
 
         // set response code - 503 service unavailable
         http_response_code(503);
 
-        // tell the user
+
         echo json_encode(array("message" => "Unable to create user."));
     }
-} // tell the user data is incomplete
+}
 else {
 
     // set response code - 400 bad request
     http_response_code(400);
 
-    // tell the user
     echo json_encode(array("message" => "Unable to create user. Data is incomplete."));
 }
 

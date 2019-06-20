@@ -7,10 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 require_once '../propertyObjects/registerPropertyDetails.php';
 require_once '../config/database.php' ;
-$instance = ConnectDb::getInstance();
-$db = $instance->getConnection();
 
-$property = new registerPropertyDetails($db);
 $data = json_decode(file_get_contents("php://input"));
 
 //CHECKING DATA IS EMPTY OR NOT
@@ -33,6 +30,10 @@ if(
     !empty($data->noOfBalconies) &&
     !empty($data->reraNo)
 ){
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $property = new registerPropertyDetails($db);
+
     $register = new RegisterPropertyDetails($db) ;
     $register->propertyName = $data->propertyName ;
     $register->propertyStatus = $data->propertyStatus ;

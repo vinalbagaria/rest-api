@@ -60,14 +60,16 @@ class Register
 
 
         //INSERT STATEMENTS
-        $query2= "INSERT INTO  $this->user (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
-        $query6="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
-        $query7="INSERT INTO $this->userCredentials(userId,password) VALUES(:userId,:password)";
+        $query1= "INSERT INTO  $this->user (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
+
+        $query2="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
+
+        $query3="INSERT INTO $this->userCredentials(userId,password) VALUES(:userId,:password)";
 
         //PREPARE STATEMENTS
+        $stmt1= $this->conn->prepare($query1);
         $stmt2= $this->conn->prepare($query2);
-        $stmt6= $this->conn->prepare($query6);
-        $stmt7= $this->conn->prepare($query7);
+        $stmt3= $this->conn->prepare($query3);
 
         //SANITIZE
         //FOR USER DETAILS
@@ -107,36 +109,47 @@ class Register
 
         //BINDING PARAMETERS
         //USER TABLE
-        $stmt2->bindParam(":firstName", $this->firstName);
-        $stmt2->bindParam(":lastName", $this->lastName);
-        $stmt2->bindParam(":contactNo", $this->contactNo);
-        $stmt2->bindParam(":emailId", $this->emailId);
-        $stmt2->bindParam(":countryId", $this->countryId);
-        $stmt2->execute();
-        $this->getUserId();
+        $stmt1->bindParam(":firstName", $this->firstName);
+        $stmt1->bindParam(":lastName", $this->lastName);
+        $stmt1->bindParam(":contactNo", $this->contactNo);
+        $stmt1->bindParam(":emailId", $this->emailId);
+        $stmt1->bindParam(":countryId", $this->countryId);
 
-        //USER ADDRESS TABLE
-        $stmt6->bindParam(":userId", $this->userId );
-        $stmt6->bindParam(":line1",$this->line1);
-        $stmt6->bindParam(":line2",$this->line2);
-        $stmt6->bindParam(":latitude",$this->latitude);
-        $stmt6->bindParam(":longitude",$this->longitude);
-        $stmt6->bindParam(":placeId",$this->placeId);
+        if($stmt1->execute())
+        {
+            $this->getUserId();
 
-        $stmt6->bindParam(":pincodeId", $this->pincodeId);
-        $stmt6->execute();
+            //USER ADDRESS TABLE
+            $stmt2->bindParam(":userId", $this->userId);
+            $stmt2->bindParam(":line1", $this->line1);
+            $stmt2->bindParam(":line2", $this->line2);
+            $stmt2->bindParam(":latitude", $this->latitude);
+            $stmt2->bindParam(":longitude", $this->longitude);
+            $stmt2->bindParam(":placeId", $this->placeId);
+
+            $stmt2->bindParam(":pincodeId", $this->pincodeId);
+
+            //USER CREDENTIALS TABLE
+            $stmt3->bindParam("userId", $this->userId);
+            $stmt3->bindParam("passwod", $this->password);
+
+            //EXECUTE STATEMENTS
 
 
-        //USER CREDENTIALS TABLE
-        $stmt7->bindParam("userId",$this->userId);
-        $stmt7->bindParam("password",$this->password);
+            if ( $stmt2->execute() && $stmt3->execute())
+                return true;
+            else
+            {
+                $query4 = "DELETE FROM $this->user WHERE userId = :userId " ;
+                $stmt4 = $this->conn->prepare($query4) ;
+                $stmt4->bindParam(":userId" , $this->userId ) ;
+                $stmt4->execute();
 
-        //EXECUTE STATEMENTS
+                return false ;
 
+            }
 
-        if( $stmt7->execute())
-            return true;
-        return false;
-
+        }
+        return false ;
     }
 }

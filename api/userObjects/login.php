@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 class Login
 {
 
@@ -14,12 +16,14 @@ class Login
     public $password;
 
     // constructor with $db as database connection
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
     // read user
-    public function checkLogin($emailId,$password){
+    public function checkLogin($emailId,$password)
+    {
         $query = "SELECT userId FROM $this->userTable WHERE emailId = :emailId ";
 
         // prepare query statement
@@ -32,18 +36,25 @@ class Login
 
         $this->userId = $temp["userId"];
 
-        //if user enters invalid username
-        if($this->userId == NULL){
-            echo json_encode(array("message" => "Invalid Username"));
-            echo json_encode(array("message" => "user  do not exist."));
 
-            return false;
-        }
+        //if user enters invalid username
+            if($this->userId == NULL)
+            {
+                echo json_encode(array("message" => "Invalid Username"));
+                echo json_encode(array("message" => "user  do not exist."));
+
+                return false;
+            }
+
+        //STORING INTO SESSION VARIABLES
+        $_SESSION['userId'] = $this->userId;
+
+
 
         //if user enters valid email id so checking of password takes place
         $getPassword = "SELECT userId,password FROM $this->userCredentialsTable WHERE userId = :userId && password = :password";
         $checkPassword = $this->conn->prepare($getPassword);
-        $checkPassword->bindParam(":userId", $this->userId);
+        $checkPassword->bindParam(":userId",  $_SESSION['userId']);
         $checkPassword->bindParam(":password", $password);
         $checkPassword->execute();
         $temp = $checkPassword->fetch(PDO::FETCH_ASSOC);

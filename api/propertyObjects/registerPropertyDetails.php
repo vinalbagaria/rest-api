@@ -8,6 +8,7 @@ class RegisterPropertyDetails
 {
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
+    private $propertyAmenityTable = "propertyAmenity" ;
 
     public $conn;
     public $userRoleId;
@@ -33,6 +34,11 @@ class RegisterPropertyDetails
     public $findMaster;
     public $roleType;
     public $roleId;
+    public $temp;
+    public $propertyId ;
+    public $amenity ;
+    public $amenityId ;
+    public $iterator ;
 
     function __construct($db)
     {
@@ -156,6 +162,51 @@ class RegisterPropertyDetails
         else
             return false ;
     }
+    //INSERTING INTO PROPERTY AMENITY TABLE
+    function addPropertyAmenity()
+    {
+        //INSERTING INTO AMENITY ID ARRAY FROM AMENITY TABLE WITH AMENITY ID
+        foreach($this->amenity as $key => $value)
+        {
+
+            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($value)));
+            $this->iterator += 1;
+        }
+
+        // FINDING OUT PROPERTYID
+        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId";
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam(" :userId ", $this->userId );
+        $stmt->execute();
+
+        $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $this->propertyId = $tempPropertyId["propertyId"];
+
+        echo json_encode( $this->propertyId);
+
+        //FOR EACH AMENITY ID THERE WILL BE INSERTION
+        foreach($this->amenityId as $key => $value)
+        {
+            $this->temp = $value;
+            echo json_encode($this->temp);
+            $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId)VALUES( :temp , :propertyId )";
+
+            $stmt1 = $this->conn->prepare($query1) ;
+            $stmt1->bindParam(":temp", $this->temp);
+            $stmt1->bindParam(":propertyId",$this->propertyId);
+            $stmt1->execute();
+            $this->iterator -= 1;
+        }
+
+        if( $this->iterator == 0)
+            return true;
+
+        else
+            return false;
+
+    }
+
 
 }
 

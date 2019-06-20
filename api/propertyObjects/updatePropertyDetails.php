@@ -1,7 +1,7 @@
 <?php
 
-include_once '../MasterData/getPropertyMasterData.php' ;
-include_once 'registerPropertyDetails.php' ;
+require_once '../MasterData/getPropertyMasterData.php' ;
+require_once 'registerPropertyDetails.php' ;
 class UpdatePropertyDetails
 
 {

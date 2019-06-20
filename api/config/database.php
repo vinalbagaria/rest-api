@@ -1,27 +1,39 @@
 <?php
-class Database{
 
-    // specify  database credentials
-    private $host = "localhost";
-    private $db_name = "SECCPL";
-    private $username = "root";
-    private $password = "";
-    public $conn;
-
-    // get the database connection
+ // Singleton to connect db.
+ class ConnectDb {
+    // Hold the class instance.
+    private static $instance = null;
+    private $conn;
+    
+    private $host = 'localhost';
+    private $user = 'root';
+    private $pass = '';
+    private $name = 'SECCPL';
+     
+    // The db connection is established in the private constructor.
+    private function __construct()
+    {
+      $this->conn = new PDO("mysql:host={$this->host};
+      dbname={$this->name}", $this->user,$this->pass,
+      array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+    }
+    
+    public static function getInstance()
+    {
+      if(!self::$instance)
+      {
+        self::$instance = new ConnectDb();
+      }
+     
+      return self::$instance;
+    }
+    
     public function getConnection()
     {
-
-        $this->conn = null;
-
-        try{
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
-        }catch(PDOException $exception){
-            echo "Connection error: " . $exception->getMessage();
-        }
-
-        return $this->conn;
+      return $this->conn;
     }
-}
+  }
+
+   
 ?>

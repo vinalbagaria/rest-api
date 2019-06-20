@@ -1,6 +1,6 @@
 <?php
 
-include_once 'updateMasterData.php';
+require_once 'updateMasterData.php';
 class GetPropertyMasterData
 {
     private $conn ;

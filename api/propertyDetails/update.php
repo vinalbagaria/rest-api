@@ -5,8 +5,8 @@ header("Access-Control-Allow-Methods:PUT");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../propertyObjects/updatePropertyDetails.php';
-include_once '../config/database.php' ;
+require_once '../propertyObjects/updatePropertyDetails.php';
+require_once '../config/database.php' ;
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -30,9 +30,9 @@ if(
     !empty($data->noOfBalconies) &&
     !empty($data->reraNo)
 ){
-    $database = new Database();
-    $db = $database->getConnection();
-
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    
     $update = new UpdatePropertyDetails($db) ;
     $update->propertyName = $data->propertyName ;
     $update->propertyStatus = $data->propertyStatus ;

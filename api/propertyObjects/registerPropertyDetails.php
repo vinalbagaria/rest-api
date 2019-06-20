@@ -1,15 +1,13 @@
 <?php
 
-include_once '../MasterData/getPropertyMasterData.php' ;
-include_once 'getPropertyDetails.php';
+require_once '../MasterData/getPropertyMasterData.php' ;
+require_once 'getPropertyDetails.php';
 
 class RegisterPropertyDetails
 
 {
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
-    private $amenitiesTable = "amenities";
-    private $propertyamenityTable = "propertyamenity";
 
     public $conn;
     public $userRoleId;
@@ -35,11 +33,6 @@ class RegisterPropertyDetails
     public $findMaster;
     public $roleType;
     public $roleId;
-    public $amenityId;
-    public $amenity;
-    public $propertyId;
-    public $temp;
-    public $i=0;
 
     function __construct($db)
     {
@@ -56,16 +49,17 @@ class RegisterPropertyDetails
         $stmt->bindParam(":userId",$userId);
         $stmt->bindParam(":roleId",$roleId);
         $stmt->execute();
-
+        
     }
 
+    //INSERTING NEW PROPERTY
     function registerPropertyDetails()
     {
         $query = "INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
         :configurationId,:userId,:userRoleId,:floorNo,:floors,:carParking,:furnishedType,:ageOfProperty,:description,
        :possessionDate,:facing,:noOfBathrooms,:noOfBalconies)";
 
-
+        
         $stmt = $this->conn->prepare($query) ;
 
         $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
@@ -95,17 +89,15 @@ class RegisterPropertyDetails
         $this->userId = htmlspecialchars(strip_tags($this->userId));
         echo json_encode(array("message" => $this->userId));
 
-
-
         $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
         echo json_encode(array("message" => $this->roleId));
 
 
         $this->addUserRole($this->userId,$this->roleId);
 
-
+        
         echo json_encode(array("message" => "neww start"));
-
+        
         $this->userRoleId = htmlspecialchars(strip_tags(($this->findMaster)->getUserRoleId($this->userId)));
         echo json_encode(array("message" => $this->userRoleId));
 
@@ -123,22 +115,14 @@ class RegisterPropertyDetails
         $this->ageOfProperty = htmlspecialchars(strip_tags($this->ageOfProperty));
         echo json_encode(array("message" => $this->ageOfProperty));
 
-
-
-
         $this->description = htmlspecialchars(strip_tags($this->description));
         echo json_encode(array("message" => $this->description));
-
-
-
 
         $this->possessionDate = htmlspecialchars(strip_tags($this->possessionDate));
         echo json_encode(array("message" => $this->possessionDate));
 
-
         $this->facing = htmlspecialchars(strip_tags($this->facing));
         echo json_encode(array("message" => $this->facing));
-
 
         $this->noOfBathrooms = htmlspecialchars(strip_tags($this->noOfBathrooms));
         echo json_encode(array("message" => $this->noOfBathrooms));
@@ -147,8 +131,7 @@ class RegisterPropertyDetails
         echo json_encode(array("message" => $this->noOfBalconies));
 
 
-        // $this->developerId = htmlspecialchars(strip_tags($this->developerId));
-        // echo json_encode(array("message" => $this->developerId));
+        //BINDING PARAMS
         $stmt->bindParam(":propertyName" , $this->propertyName);
         $stmt->bindParam(":propertyStatus" , $this->propertyStatus);
         $stmt->bindParam(":reraNo" , $this->reraNo);
@@ -172,51 +155,6 @@ class RegisterPropertyDetails
             return true ;
         else
             return false ;
-    }
-
-    //INSERTING INTO PROPERTY AMENITY TABLE
-    function addPropertyAmenity()
-    {
-        //INSERTING INTO AMENITY ID ARRAY FROM AMENITY TABLE WITH AMENITY ID
-        foreach($this->amenity as $key => $value)
-        {
-
-            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($value)));
-            $this->i += 1;
-        }
-
-        // FINDING OUT PROPERTYID
-        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId";
-        $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(" :userId ", $this->userId );
-        $stmt->execute();
-
-        $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->propertyId = $tempPropertyId["propertyId"];
-
-        echo json_encode( $this->propertyId);
-
-        //FOR EACH AMENITY ID THERE WILL BE INSERTION
-        foreach($this->amenityId as $key => $value)
-        {
-            $this->temp = $value;
-            echo json_encode($this->temp);
-            $query1 = "INSERT INTO $this->propertyamenityTable(amenityId,propertyId)VALUES( :temp , :propertyId )";
-
-            $stmt1 = $this->conn->prepare($query1) ;
-            $stmt1->bindParam(":temp", $this->temp);
-            $stmt1->bindParam(":propertyId",$this->propertyId);
-            $stmt1->execute();
-            $this->i -= 1;
-        }
-
-        if( $this->i == 0)
-            return true;
-
-        else
-            return false;
-
     }
 
 }

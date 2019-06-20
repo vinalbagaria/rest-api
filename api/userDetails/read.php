@@ -3,13 +3,12 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once '../config/database.php';
-include_once '../userObjects/login.php';
-
+// database connection will be here
+// include database and object files
+require_once '../config/database.php';
+require_once '../userObjects/login.php';
 
 $data = json_decode(file_get_contents("php://input"));
-
-
 
 //CHECKING DATA IS EMPTY OR NOT
 if(
@@ -18,8 +17,8 @@ if(
 )
 {
     // INSTANTIATE DATABASE
-    $database = new Database();
-    $db = $database->getConnection();
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
 
     $user = new Login($db);
     //checkLogin function to validate the user

@@ -3,9 +3,11 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once '../config/database.php';
-include_once '../propertyObjects/getPropertyDetails.php';
-include_once '../userObjects/getUserDetails.php';
+// database connection will be here
+// include database and object files
+require_once '../config/database.php';
+require_once '../propertyObjects/getPropertyDetails.php';
+require_once '../userObjects/getUserDetails.php';
 
 $data = json_decode(file_get_contents("php://input"));
 $userId = $data->userId;
@@ -16,11 +18,11 @@ if(
     !empty($data->userId)
 )
 {
-    //INSTANTIATE DATABASE OBJECT
-    $database = new Database();
-    $db = $database->getConnection();
+    // instantiate database and Login object
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
 
-    //INITIALIZE PROPERTY DETAILS OBJECT
+    // initialize object
     $propertyDetails = new GetPropertyDetails($db);
     $propertyId = $propertyDetails->getPropertyId($data->userId);
 

@@ -5,12 +5,9 @@ header("Access-Control-Allow-Methods: PUT");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../config/database.php';
-include_once '../userObjects/updatePassword.php';
+require_once '../config/database.php';
+require_once '../userObjects/updatePassword.php';
 
-$database = new Database();
-$db = $database->getConnection();
-$update = new UpdatePassword($db);
 $data = json_decode(file_get_contents("php://input"));
 
 //CHECKING DATA IS EMPTY OR NOT
@@ -19,7 +16,9 @@ if(
     !empty($data->oldPassword) &&
     !empty($data->newPassword)
 ){
-
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $update = new UpdatePassword($db);
     $update->changePassword($data->userId,$data->oldPassword,$data->newPassword);
 }
 else

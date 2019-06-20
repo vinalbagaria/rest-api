@@ -7,15 +7,14 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../config/database.php';
-include_once 'getMasterData.php';
+require_once '../config/database.php';
+require_once 'getMasterData.php';
 
-$database = new Database();
-$db = $database->getConnection();
-
-$master = new GetMasterData($db);
 $data = json_decode(file_get_contents("php://input"));
 
+$instance = ConnectDb::getInstance();
+$db = $instance->getConnection();
+$master = new GetMasterData($db);
 
 //DISPLAY LIST OF COUNTRIES
 $countryList[] = $master->getCountries();
@@ -40,7 +39,6 @@ if(!empty($data->state) && !empty($data->country)){
     echo json_encode(array("cityList"=> $cityList));
 
 }
-
 //DISPLAY LIST OF ROLES
 $roleList[] = $master->getRoles();
 echo json_encode(array("roleList"=> $roleList));

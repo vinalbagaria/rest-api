@@ -1,6 +1,6 @@
 <?php
 
-include_once 'registerProperty.php';
+require_once 'registerProperty.php';
  class GetPropertyDetails
  {
     private $conn ;
@@ -115,7 +115,7 @@ include_once 'registerProperty.php';
            return $data["noOfBalconies"];
        }
 
-       //FUNCTION TO GET PROPERTY CAR PARKING STATUS BASED ON PROPERTY ID
+       //FUNCTION TO GET PROPERTY CAR PARKING stmtUS BASED ON PROPERTY ID
        public function getCarParking($propertyId)
        {
            $query = " SELECT carParking from $this->propertyDetailsTable where propertyId = :propertyId";

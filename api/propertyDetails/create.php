@@ -46,6 +46,9 @@ if(
     $register->floors = $data->floors ;
     $register->carParking = $data->carParking ;
     $register->furnishedType = $data->furnishedType ;
+    $register->line1 = $data->line1;
+    $register->line2 = $data->line2;
+    
     
     if(!empty($data->facing))
         $register->facing = $data->facing ;

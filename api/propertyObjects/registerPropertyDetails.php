@@ -8,6 +8,7 @@ class RegisterPropertyDetails
 {
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
+    private $propertyAddress = "propertyAddress";
 
     public $conn;
     public $userRoleId;
@@ -52,6 +53,13 @@ class RegisterPropertyDetails
         
     }
 
+    // function addPropertyAddress()
+    // {
+    //     $query = "INSERT INTO $this->propertyAddress(propertyId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:propertyId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
+    //     $stmt = $this->conn->prepare($query);
+    //     st
+    // }
+
     //INSERTING NEW PROPERTY
     function registerPropertyDetails()
     {
@@ -61,22 +69,17 @@ class RegisterPropertyDetails
 
         
         $stmt = $this->conn->prepare($query) ;
-
         $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
         echo json_encode($this->configurationId) ;
-
         $this->userRoleId = $this->master->getRoleId($this->roleType) ;
         echo json_encode(array("userRoleId" => $this->userRoleId) );
         $this->propertyTypeId = $this->master->getPropertyTypeId($this->propertyType) ;
 
-
         //SANITIZE
         $this->propertyName = htmlspecialchars(strip_tags($this->propertyName));
         echo json_encode(array("message" => $this->propertyName));
-
         $this->propertyStatus = htmlspecialchars(strip_tags($this->propertyStatus));
         echo json_encode(array("message" => $this->propertyStatus));
-
         $this->reraNo = htmlspecialchars(strip_tags($this->reraNo));
         echo json_encode(array("message" => $this->reraNo));
 
@@ -92,10 +95,7 @@ class RegisterPropertyDetails
         $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
         echo json_encode(array("message" => $this->roleId));
 
-
-        $this->addUserRole($this->userId,$this->roleId);
-
-        
+        $this->addUserRole($this->userId,$this->roleId);        
         echo json_encode(array("message" => "neww start"));
         
         $this->userRoleId = htmlspecialchars(strip_tags(($this->findMaster)->getUserRoleId($this->userId)));

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'registerProperty.php';
+//require_once 'registerProperty.php';
  class GetPropertyDetails
  {
     private $conn ;
@@ -9,12 +9,12 @@ require_once 'registerProperty.php';
     private $configurationTable = "configuration" ;
     private $userTable = "user" ;
     private $userRoleTable = "userRole" ;
-    private $registerProperty ;
+   // private $registerProperty ;
 
     public function __construct($db)
     {
         $this->conn = $db;
-        $this->registerProperty = new RegisterProperty($db);
+       // $this->registerProperty = new RegisterProperty($db);
     }
     
     //FUNCTION TO GET  PROPERTY ID BASED ON USER ID

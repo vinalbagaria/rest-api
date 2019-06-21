@@ -90,7 +90,7 @@ class GetPropertyMasterData
             $existDocumentName=$stmt->fetch(PDO::FETCH_ASSOC);
 
         }
-        return $existDocumentName["propertyTypeId"];
+        return $existDocumentName["documentTypeId"];
     }
 
     //GET UNIT ID FROM UNIT NAME

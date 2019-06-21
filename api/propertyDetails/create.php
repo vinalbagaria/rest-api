@@ -7,10 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../propertyObjects/registerPropertyDetails.php';
 include_once '../config/database.php' ;
-$database = new Database();
-$db = $database->getConnection();
 
-$property = new registerPropertyDetails($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -20,21 +17,21 @@ if(
     !empty($data->propertyStatus) &&
     !empty($data->propertyType) &&
     !empty($data->configurationType) &&
-    !empty( $data->userId) &&
+    !empty($data->userId) &&
     !empty($data->floorNo) &&
     !empty($data->roleType) &&
-    !empty( $data->floors) &&
+    !empty($data->floors) &&
     !empty($data->carParking) &&
-    !empty( $data->furnishedType) &&
-    !empty($data->facing) &&
-    !empty($data->ageOfProperty) &&
-    !empty($data->description) &&
-    !empty($data->possessionDate) &&
-    !empty($data->noOfBathrooms) &&
-    !empty($data->noOfBalconies) &&
-    !empty($data->reraNo)&&
-    !empty($data->amenity)
+    !empty($data->furnishedType) &&
+    !empty($data->amenity) &&
+
+    !empty($data->carpetArea) &&
+    !empty($data->unitName) &&
+    !empty($data->baseValue)
 ){
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+
     $register = new RegisterPropertyDetails($db) ;
     $register->propertyName = $data->propertyName ;
     $register->propertyStatus = $data->propertyStatus ;
@@ -61,26 +58,49 @@ if(
     if(!empty($data->noOfBalconies))
         $register->noOfBalconies =$data->noOfBalconies ;
 
+
+    $register->carpetArea = $data->carpetArea ;
+    $register->baseValue = $data->baseValue ;
+    $register->unitName = $data->unitName ;
+
+    if(!empty($data->pricePerUnit))
+        $register->pricePerUnit = $data->pricePerUnit ;
+    if(!empty($data->buildUpArea))
+        $register->buildUpArea = $data->buildUpArea ;
+    if(!empty($data->registration))
+        $register->registration = $data->registration ;
+    if(!empty($data->stampDuty))
+        $register->stampDuty = $data->stampDuty ;
+    if(!empty($data->maintenance))
+        $register->maintenance = $data->maintenance ;
     //INSERTING INTO USER ROLE TABLE
-
-
     if($register->registerPropertyDetails())
     {
-        echo json_encode(array("message" => "Updated Successfully"));
+        echo json_encode(array("message" => "Property Details filled"));
     }
     else
     {
-        echo json_encode(array("message" => "Update Unsuccessful"));
+        echo json_encode(array("message" => "property details unsuccessful"));
     }
 
 
-    if($register->addPropertyAmenty())
+    if($register->addPropertyAmenity())
     {
-        echo json_encode(array("message" => "Updated Successfully"));
+        echo json_encode(array("message" => "Added amenities Successfully"));
     }
     else
     {
-        echo json_encode(array("message" => "Update Unsuccessful"));
+        //Delete from propertyDetails Table (left)
+        echo json_encode(array("message" => "amenities Unsuccessful"));
+    }
+    if($register->addPropertyPrice())
+    {
+        echo json_encode(array("message" => "Added property Price Successfully"));
+    }
+    else
+    {
+        //Delete from propertyDetails Table (left)
+        echo json_encode(array("message" => "property Price Unsuccessful"));
     }
 }
 else

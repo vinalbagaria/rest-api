@@ -13,10 +13,13 @@ class GetUserDetails
     private $pincodeTable = "pincode";
     private $updateMaster;
     private $roleTable = "role" ;
+    private $data ;
+    private $update ;
 
     public function __construct($db)
     {
         $this->conn = $db;
+        $this->update = new RegisterPropertyDetails($db) ;
     }
 
     //FUNCTION FOR GETTTING ROLES OF A PARTICULAR USER
@@ -28,9 +31,31 @@ class GetUserDetails
         $stat->execute();
         while($row = $stat->fetch( PDO::FETCH_ASSOC))
         {
-            $data[] = $row;
+            $this->data[] = $row;
         }
-        return $data;
+        return $this->data;
+    }
+
+    //FUNCTION FOR GETTING USER ROLE ID
+    function getUserRoleId($userId , $roleId )
+    {
+        $query = "SELECT userRoleId from $this->userRoleTable WHERE userId = :userId && roleId = :roleId " ;
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam( ":userId" , $userId ) ;
+        $stmt->bindParam( ":roleId" , $roleId ) ;
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //IF userRoleId DOES NOT EXIST
+        if(!$data)
+        {
+            //INSERT FUNCTION CALL
+            $this->update->addUserRole($this->userId,$this->roleId) ;
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        echo json_encode(array("message" => $data["userRoleId"]));
+        return $data["userRoleId"] ;
     }
 
 }

@@ -9,6 +9,7 @@ class RegisterPropertyDetails
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
     private $propertyAmenityTable = "propertyAmenity" ;
+    private $propertyPriceTable = "propertyPrice" ;
 
     public $conn;
     public $userRoleId;
@@ -24,12 +25,12 @@ class RegisterPropertyDetails
     public $floors;
     public $carParking;
     public $furnishedType;
-    public $ageOfProperty;
-    public $description;
-    public $possessionDate;
-    public $facing;
-    public $noOfBathrooms;
-    public $noOfBalconies;
+    public $ageOfProperty = NULL ;
+    public $description = NULL ;
+    public $possessionDate = NULL ;
+    public $facing = NULL ;
+    public $noOfBathrooms = NULL ;
+    public $noOfBalconies = NULL ;
     public $master;
     public $findMaster;
     public $roleType;
@@ -38,7 +39,18 @@ class RegisterPropertyDetails
     public $propertyId ;
     public $amenity ;
     public $amenityId ;
-    public $iterator ;
+    public $iterator=0 ;
+
+    // PROPERTYPRICE TABLE ;
+    public $carpetArea ;
+    public $pricePerUnit ;
+    public $buildUpArea ;
+    public $baseValue ;
+    public $registration ;
+    public $stampDuty ;
+    public $maintenance ;
+    public $unitName ;
+    public $unitId ;
 
     function __construct($db)
     {
@@ -61,9 +73,9 @@ class RegisterPropertyDetails
     //INSERTING NEW PROPERTY
     function registerPropertyDetails()
     {
-        $query = "INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
+        $query = " INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
         :configurationId,:userId,:userRoleId,:floorNo,:floors,:carParking,:furnishedType,:ageOfProperty,:description,
-       :possessionDate,:facing,:noOfBathrooms,:noOfBalconies)";
+       :possessionDate,:facing,:noOfBathrooms,:noOfBalconies) " ;
 
         
         $stmt = $this->conn->prepare($query) ;
@@ -168,29 +180,27 @@ class RegisterPropertyDetails
         //INSERTING INTO AMENITY ID ARRAY FROM AMENITY TABLE WITH AMENITY ID
         foreach($this->amenity as $key => $value)
         {
-
-            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($value)));
+            $this->temp = $value ;
+            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($this->temp)));
             $this->iterator += 1;
         }
 
         // FINDING OUT PROPERTYID
-        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId";
+        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId " ;
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(" :userId ", $this->userId );
+        $stmt->bindParam(":userId" , $this->userId );
         $stmt->execute();
 
         $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
-
         $this->propertyId = $tempPropertyId["propertyId"];
-
-        echo json_encode( $this->propertyId);
+//        echo json_encode( $this->propertyId);
 
         //FOR EACH AMENITY ID THERE WILL BE INSERTION
         foreach($this->amenityId as $key => $value)
         {
             $this->temp = $value;
             echo json_encode($this->temp);
-            $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId)VALUES( :temp , :propertyId )";
+            $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId) VALUES( :temp , :propertyId )";
 
             $stmt1 = $this->conn->prepare($query1) ;
             $stmt1->bindParam(":temp", $this->temp);
@@ -201,10 +211,33 @@ class RegisterPropertyDetails
 
         if( $this->iterator == 0)
             return true;
-
         else
             return false;
 
+    }
+
+    function addPropertyPrice()
+    {
+        $query = "INSERT INTO $this->propertyPriceTable
+        ( pricePerUnit , carpetArea , propertyId , buildUpArea , baseValue , registration , stampDuty , maintenance , unitId) 
+        VALUES ( :pricePerUnit , :carpetArea , :propertyId , :buildUpArea , :baseValue , :registration , :stampDuty ,
+         :maintenance , :unitId ) " ;
+        $this->unitId = $this->master->getUnitId( $this->unitName );
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit ) ;
+        $stmt->bindParam(":carpetArea" , $this->carpetArea ) ;
+        $stmt->bindParam(":propertyId" , $this->propertyId ) ;
+        $stmt->bindParam(":buildUpArea" , $this->buildUpArea ) ;
+        $stmt->bindParam(":baseValue" , $this->baseValue ) ;
+        $stmt->bindParam(":registration" , $this->registration ) ;
+        $stmt->bindParam(":stampDuty" , $this->stampDuty ) ;
+        $stmt->bindParam(":maintenance" , $this->maintenance ) ;
+        $stmt->bindParam(":unitId" , $this->unitId ) ;
+        if($stmt->execute())
+            return true ;
+        else
+            return false;
     }
 
 

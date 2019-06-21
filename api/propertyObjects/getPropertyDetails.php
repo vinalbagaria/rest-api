@@ -1,17 +1,15 @@
 <?php
 
-require_once 'registerProperty.php';
  class GetPropertyDetails
  {
     private $conn ;
     private $propertyDetailsTable = "propertyDetails" ;
     private $userRoleTable = "userRole" ;
-    private $registerProperty ;
+
 
     public function __construct($db)
     {
         $this->conn = $db;
-        $this->registerProperty = new RegisterProperty($db);
     }
     
     //FUNCTION TO GET  PROPERTY ID BASED ON USER ID

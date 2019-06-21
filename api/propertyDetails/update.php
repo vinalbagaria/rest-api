@@ -22,13 +22,6 @@ if(
     !empty( $data->floors) &&
     !empty($data->carParking) &&
     !empty( $data->furnishedType) &&
-    !empty($data->facing) &&
-    !empty($data->ageOfProperty) &&
-    !empty($data->description) &&
-    !empty($data->possessionDate) &&
-    !empty($data->noOfBathrooms) &&
-    !empty($data->noOfBalconies) &&
-    !empty($data->reraNo)&&
     !empty($data->amenity)
 ){
     $instance = ConnectDb::getInstance();
@@ -45,8 +38,8 @@ if(
     $update->floorNo = $data->floorNo ;
     $update->floors = $data->floors ;
     $update->carParking = $data->carParking ;
-    $update->furnishedType = $data->furnishedType;
-    $update->amenity = $data->amenity;
+    $update->furnishedType = $data->furnishedType ;
+    $update->amenity = $data->amenity ;
     if(!empty($data->facing))
         $update->facing = $data->facing ;
     if(!empty($data->ageOfProperty))
@@ -62,17 +55,17 @@ if(
 
     if($update->updatePropertyDetails())
     {
-        echo json_encode(array("Updated Successfully"));
-    }
-    else
-        echo json_encode(array("Update Unsuccessful"));
+        echo json_encode(array("message" => "Updated property details Successfully "));
+    }else
+        echo json_encode(array("message" => "property details Unsuccessful "));
 
-    if($update->updatePropertyAmenity()){
-        echo json_encode("Updated Successfully");
-    } else
-    echo json_encode("Update Unsuccessful");
+    if($update->updatePropertyAmenity())
+    {
+        echo json_encode(array("message" => "Updated amenity Successfully "));
+    }else
+        echo json_encode(array("message" => "amenity Unsuccessful "));
 
 }else
 {
-    echo json_encode("Incomplete Data");
+    echo json_encode(array("message" => "Incomplete Data "));
 }

@@ -104,7 +104,7 @@ class GetPropertyMasterData
 
         if(!$existUnitName)
         {
-            $this->updateMaster->addDocumentType($unitName);
+            $this->updateMaster->addUnit($unitName);
             $stmt->execute();
             $existUnitName=$stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -134,9 +134,9 @@ class GetPropertyMasterData
     //GET AMENITIY ID USING AMENITY NAME    
     function getAmenityId($amenity)
     {
-        $query = "SELECT  amenityId from $this->amenitiesTable WHERE amenity  = :amenity ";
+        $query = "SELECT amenityId from $this->amenitiesTable WHERE amenity = :amenity ";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":amenity ",$amenity );
+        $stmt->bindParam(":amenity",$amenity);
         $stmt->execute();
         $existAmenity=$stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -145,9 +145,8 @@ class GetPropertyMasterData
             $this->updateMaster->addAmenity($amenity);
             $stmt->execute();
             $existAmenity=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
-        return $existAmenity["amenity"];
+        return $existAmenity["amenityId"];
     }
 }
 

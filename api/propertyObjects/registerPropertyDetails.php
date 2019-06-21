@@ -2,6 +2,8 @@
 
 require_once '../MasterData/getPropertyMasterData.php' ;
 require_once 'getPropertyDetails.php';
+require_once '../MasterData/getMasterData.php';
+require_once '../propertyObjects/getPropertyDetails.php';
 
 class RegisterPropertyDetails
 
@@ -9,6 +11,7 @@ class RegisterPropertyDetails
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
     private $propertyAddress = "propertyAddress";
+    private $propertyAmenityTable = "propertyAmenity" ;
 
     public $conn;
     public $userRoleId;
@@ -34,12 +37,34 @@ class RegisterPropertyDetails
     public $findMaster;
     public $roleType;
     public $roleId;
+    public $temp;
+    public $propertyId ;
+    public $amenity ;
+    public $amenityId ;
+    public $iterator ;
+    public $country;
+    public $countryId;
+    public $state;
+    public $stateId;
+    public $city;
+    public $cityId;
+    public $pincode;
+    public $pincodeId;
+    public $line2;
+    public $line1;
+    public $latitude;
+    public $longitude;
+    public $placeId;
+    //OBJECT OF getMasterData TABLE
+    public $masterDetails;
 
     function __construct($db)
     {
         $this->conn = $db;
         $this->master = new GetPropertyMasterData($db);
         $this->findMaster = new GetPropertyDetails($db);
+        $this->masterDetails=new GetMasterData($db);
+        $this->propertyDetails = new GetPropertyDetails($db);
     }
 
     //INSERTING INTO USERROLE TABLE
@@ -53,12 +78,43 @@ class RegisterPropertyDetails
         
     }
 
-    // function addPropertyAddress()
-    // {
-    //     $query = "INSERT INTO $this->propertyAddress(propertyId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:propertyId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
-    //     $stmt = $this->conn->prepare($query);
-    //     st
-    // }
+    function addPropertyAddress()
+    {
+        $propertyId = $this->propertyDetails->getPropertyId($this->userId);
+        $query = "INSERT INTO $this->propertyAddress(propertyId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:propertyId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
+        $stmt = $this->conn->prepare($query);
+        //FOR COUNTRY
+        $this->countryId=htmlspecialchars(strip_tags(($this->masterDetails)->getCountryId($this->country)));
+        //FOR STATE
+        $this->state=htmlspecialchars(strip_tags($this->state));
+        $this->stateId=htmlspecialchars(strip_tags(($this->masterDetails)->getStateId($this->state , $this->countryId)));
+        //FOR CITY
+        $this->city=htmlspecialchars(strip_tags($this->city));
+        $this->cityId=htmlspecialchars(strip_tags(($this->masterDetails)->getCityId($this->city , $this->stateId)));
+        //FOR PINCODE
+        $this->pincode=htmlspecialchars(strip_tags($this->pincode));
+        $this->pincodeId=htmlspecialchars(strip_tags(($this->masterDetails)->getpincodeId($this->pincode , $this->cityId)));
+        //FOR REMAINING ADDRESS
+        $this->line1=htmlspecialchars(strip_tags($this->line1));
+        $this->line2=htmlspecialchars(strip_tags($this->line2));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->placeId=htmlspecialchars(strip_tags($this->placeId));
+
+        $stmt->bindParam(":line1", $this->line1);
+        $stmt->bindParam(":line2", $this->line2);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":placeId", $this->placeId);
+        $stmt->bindParam(":pincodeId", $this->pincodeId);
+        $stmt->bindParam(":propertyId" , $propertyId);
+
+        if($stmt->execute())
+            return true ;
+        else
+            return false ;
+
+    }
 
     //INSERTING NEW PROPERTY
     function registerPropertyDetails()
@@ -156,6 +212,51 @@ class RegisterPropertyDetails
         else
             return false ;
     }
+    //INSERTING INTO PROPERTY AMENITY TABLE
+    function addPropertyAmenity()
+    {
+        //INSERTING INTO AMENITY ID ARRAY FROM AMENITY TABLE WITH AMENITY ID
+        foreach($this->amenity as $key => $value)
+        {
+
+            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($value)));
+            $this->iterator += 1;
+        }
+
+        // FINDING OUT PROPERTYID
+        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId";
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam(" :userId ", $this->userId );
+        $stmt->execute();
+
+        $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $this->propertyId = $tempPropertyId["propertyId"];
+
+        echo json_encode( $this->propertyId);
+
+        //FOR EACH AMENITY ID THERE WILL BE INSERTION
+        foreach($this->amenityId as $key => $value)
+        {
+            $this->temp = $value;
+            echo json_encode($this->temp);
+            $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId)VALUES( :temp , :propertyId )";
+
+            $stmt1 = $this->conn->prepare($query1) ;
+            $stmt1->bindParam(":temp", $this->temp);
+            $stmt1->bindParam(":propertyId",$this->propertyId);
+            $stmt1->execute();
+            $this->iterator -= 1;
+        }
+
+        if( $this->iterator == 0)
+            return true;
+
+        else
+            return false;
+
+    }
+
 
 }
 

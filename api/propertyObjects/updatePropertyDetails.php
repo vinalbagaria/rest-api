@@ -29,9 +29,14 @@ class UpdatePropertyDetails
     public $noOfBalconies;
     public $master;
     public $roleType;
-    public $roleId ;
+    public $roleId;
+    public $amenityId;
+    public $i = 0;
+    public $temp;
+    public $amenity;
     private $propertyDetailsTable = "propertyDetails" ;
     private $userRoleTable = "userRole" ;
+    private $propertyAmenityTable = "propertyAmenity";
     function __construct($db)
     {
         $this->conn = $db ;
@@ -43,7 +48,7 @@ class UpdatePropertyDetails
     function updatePropertyDetails()
     {
         $query = "UPDATE $this->propertyDetailsTable SET propertyName = :propertyName, propertyStatus = :propertyStatus,reraNo = :reraNo,
-         userRoleId = :userRoleId , configurationId = :configurationId , userRoleId = :userRoleId ,
+         userRoleId = :userRoleId , configurationId = :configurationId  ,
          floorNo = :floorNo , floors = :floors , carParking = :carParking , furnishedType = :furnishedType,
          ageOfProperty = :ageOfProperty  , description = :description ,
        possessionDate = :possessionDate  , facing = :facing , noOfBathrooms = :noOfBathrooms , noOfBalconies = :noOfBalconies 
@@ -116,6 +121,48 @@ class UpdatePropertyDetails
         }
         echo json_encode(array("message" => $data["userRoleId"]));
         return $data["userRoleId"] ;
+    }
+
+    function updatePropertyAmenity()
+    {
+        echo json_encode("hiii");
+        foreach($this->amenity as $key => $value)
+        {
+            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($value)));
+            $this->i += 1;
+        }
+
+        foreach($this->amenityId as $key => $value)
+        {
+            echo json_encode($value);
+        }
+
+        //FINDING OUT PROPERTYID
+        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId"; 
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam(":userId",$this->userId);
+        $stmt->execute();
+        $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->propertyId = $tempPropertyId["propertyId"];
+        echo json_encode($this->propertyId);
+
+        //UPDATING PROPERTY AMENITY USING PROPERTYID
+        foreach($amenityId as $key => $value)
+        {
+        $this->temp = $value;
+        $query1 = "UPDATE $this->propertyAmenityTable SET amenityId = :temp WHERE propertyId = :propertyId";
+        $stmt1 = $this->conn->prepare($query1);
+        $stmt1->bindParam(":temp",$this->temp);
+        $stmt1->bindParam(":propertyId",$this->propertyId);
+        $stmt1->execute();
+        $this->i -= 1;
+        }
+
+        if($this->i == 0)
+        return true;
+        else
+        return false;
+
     }
 
 

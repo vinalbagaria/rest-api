@@ -28,7 +28,8 @@ if(
     !empty($data->possessionDate) &&
     !empty($data->noOfBathrooms) &&
     !empty($data->noOfBalconies) &&
-    !empty($data->reraNo)
+    !empty($data->reraNo)&&
+    !empty($data->amenity)
 ){
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
@@ -44,7 +45,8 @@ if(
     $update->floorNo = $data->floorNo ;
     $update->floors = $data->floors ;
     $update->carParking = $data->carParking ;
-    $update->furnishedType = $data->furnishedType ;
+    $update->furnishedType = $data->furnishedType;
+    $update->amenity = $data->amenity;
     if(!empty($data->facing))
         $update->facing = $data->facing ;
     if(!empty($data->ageOfProperty))
@@ -60,10 +62,16 @@ if(
 
     if($update->updatePropertyDetails())
     {
-        echo json_encode("Updated Successfully");
+        echo json_encode(array("Updated Successfully"));
     }
     else
-        echo json_encode("Update Unsuccessful");
+        echo json_encode(array("Update Unsuccessful"));
+
+    if($update->updatePropertyAmenity()){
+        echo json_encode("Updated Successfully");
+    } else
+    echo json_encode("Update Unsuccessful");
+
 }else
 {
     echo json_encode("Incomplete Data");

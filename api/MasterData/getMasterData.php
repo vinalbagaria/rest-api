@@ -6,10 +6,6 @@ require_once 'updateMasterData.php';
 class GetMasterData
 {
     private $conn;
-    private $user = "user";
-    private $userAddress = "userAddress";
-    private $userCredentials = "userCredentials";
-    private $userRoleTable = " userRole ";
     private $countryTable = "country";
     private $stateTable = "state";
     private $cityTable = "city";
@@ -83,7 +79,7 @@ class GetMasterData
     //FUNCTION FOR GETTING PINCODEID
     public function getPincodeId( $pincode ,$cityId )
     {
-        $query = "SELECT pincodeId FROM $this->pincodeTable WHERE pincode=:pincode" ;
+        $query = "SELECT pincodeId FROM $this->pincodeTable WHERE pincode = :pincode" ;
         $exist3 = $this->conn->prepare($query);
         $exist3->bindParam(":pincode",$pincode);
         $exist3->execute();
@@ -91,11 +87,11 @@ class GetMasterData
         $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
         if(!$pincodeExist)
         {
-            $this->updateMaster->addPincode($pincode, $cityId);
+            $this->updateMaster->addPincode($pincode , $cityId);
             $exist3->execute();
-            $pincode = $exist3->fetch(PDO::FETCH_ASSOC);
+            $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
         }
-        return $pincode["pincodeId"];
+        return $pincodeExist["pincodeId"];
     }
 
     //FUNCTION FOR GETTING LIST OF COUNTRIES

@@ -5,9 +5,6 @@
  {
     private $conn ;
     private $propertyDetailsTable = "propertyDetails" ;
-    private $propertyTypeTable = "propertyType" ;
-    private $configurationTable = "configuration" ;
-    private $userTable = "user" ;
     private $userRoleTable = "userRole" ;
    // private $registerProperty ;
 

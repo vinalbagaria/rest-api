@@ -19,13 +19,15 @@ if(is_uploaded_file($_FILES["propertyDocument"]["tmp_name"]))
 
     $tmp_file = $_FILES["propertyDocument"]["tmp_name"] ;
     $documentName = $_FILES["propertyDocument"]["name"];
+
+
     $upload_dir = "uploads/".$documentName;
     $userId = $_POST["userId"] ;
 
-    $propertyId = $propertyDetails->getPropertyId($userId) ;
-    echo json_encode(array("propertyId" =>$propertyId )) ;
-    $documentTypeId = $propertyMaster->getDocumentTypeId($documentName);
-    echo json_encode(array("documentTypeId" =>$documentTypeId )) ;
+     $propertyId = $propertyDetails->getPropertyId($userId) ;
+     echo json_encode(array("propertyId" =>$propertyId )) ;
+     $documentTypeId = $propertyMaster->getDocumentTypeId($documentName);
+     echo json_encode(array("documentTypeId" =>$documentTypeId )) ;
 
      $query = "INSERT INTO documents(propertyId, documentTypeId ,documentLink) VALUES (:propertyId , :documentTypeId ,:upload_dir)";
      $stmt= $db->prepare($query);

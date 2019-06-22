@@ -11,6 +11,7 @@ include_once '../config/database.php' ;
 $data = json_decode(file_get_contents("php://input"));
 
 //CHECKING DATA IS EMPTY OR NOT
+//TAKE ADDRESS DIFFERENTLY
 if(
     !empty($data->userId) &&
     !empty($data->country) &&

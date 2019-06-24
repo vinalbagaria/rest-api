@@ -3,7 +3,8 @@
 require_once '../MasterData/getPropertyMasterData.php' ;
 require_once 'registerPropertyDetails.php' ;
 require_once '../userObjects/getUserDetails.php' ;
-
+require_once 'getPropertyDetails.php';
+require_once '../MasterData/getMasterData.php' ;
 class UpdatePropertyDetails
 
 {
@@ -39,8 +40,36 @@ class UpdatePropertyDetails
     public $roleType;
     public $roleId ;
 
+    public $pricePerUnit;
+    public $carpetArea;
+    public $buildUpArea;
+    public $baseValue;
+    public $registration;
+    public $stampDuty;
+    public $maintenance;
+    public $unitId;
+    public $find;
+    public $unitName;
+
+    public $masterDetails ;
+    public $line1;
+    public $line2;
+    public $latitude;
+    public $longitude;
+    public $placeId;
+    public $pincodeId;
+    public $pincode;
+    public $city;
+    public $cityId;
+    public $state;
+    public $stateId;
+    public $country;
+    public $countryId;
+
     private $propertyDetailsTable = "propertyDetails" ;
     private $propertyAmenityTable  = "propertyAmenity" ;
+    private $propertyPriceTable = "propertyPrice";
+    private $propertyAddressTable = "propertyAddress" ;
 
     function __construct($db)
     {
@@ -48,6 +77,8 @@ class UpdatePropertyDetails
         $this->master = new GetPropertyMasterData($db) ;
         $this->get = new GetUserDetails($db)  ;
         $this->update = new RegisterPropertyDetails($db) ;
+        $this->find = new GetPropertyDetails($db);
+        $this->masterDetails=new GetMasterData($db);
     }
 
     //FUNCTION FOR UPDATING PROPERTY DETAILS
@@ -160,6 +191,64 @@ class UpdatePropertyDetails
 
     }
 
-   
+    function updatePropertyPrice()
+    {
+        echo json_encode(array("message"=>"property price table"));
+        $this->propertyId = $this->find->getPropertyId($this->userId);
+        $this->unitId = $this->master->getUnitId($this->unitName);
+        echo json_encode($this->unitId);
+        echo json_encode($this->userId);
+        echo json_encode($this->propertyId);
 
+        $query = "UPDATE $this->propertyPriceTable
+        SET pricePerUnit=:pricePerUnit , carpetArea = :carpetArea , buildUpArea = :buildUpArea, baseValue = :baseValue ,
+        registration = :registration ,stampDuty = :stampDuty , maintenance = :maintenance ,
+        unitId = :unitId WHERE propertyId =:propertyId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit ) ;
+        $stmt->bindParam(":carpetArea" , $this->carpetArea ) ;
+        $stmt->bindParam(":propertyId" , $this->propertyId ) ;
+        $stmt->bindParam(":buildUpArea" , $this->buildUpArea ) ;
+        $stmt->bindParam(":baseValue" , $this->baseValue ) ;
+        $stmt->bindParam(":registration" , $this->registration ) ;
+        $stmt->bindParam(":stampDuty" , $this->stampDuty ) ;
+        $stmt->bindParam(":maintenance" , $this->maintenance ) ;
+        $stmt->bindParam(":unitId" , $this->unitId ) ;
+
+        if($stmt->execute())
+            return true;
+        else
+            return false;
+    }
+    function updatePropertyAddress()
+    {
+        $query = "UPDATE $this->propertyAddressTable
+        SET line1 = :line1 , line2 = :line2 , latitude = :latitude , longitude = :longitude , placeId = :placeId ,
+        pincodeId = :pincodeId WHERE propertyId = :propertyId ";
+
+        //FOR COUNTRY
+        $this->countryId=htmlspecialchars(strip_tags(($this->masterDetails)->getCountryId($this->country)));
+        //FOR STATE
+        $this->state=htmlspecialchars(strip_tags($this->state));
+        $this->stateId=htmlspecialchars(strip_tags(($this->masterDetails)->getStateId($this->state , $this->countryId)));
+        //FOR CITY
+        $this->city=htmlspecialchars(strip_tags($this->city));
+        $this->cityId=htmlspecialchars(strip_tags(($this->masterDetails)->getCityId($this->city , $this->stateId)));
+        //FOR PINCODE
+        $this->pincode=htmlspecialchars(strip_tags($this->pincode));
+        $this->pincodeId=htmlspecialchars(strip_tags(($this->masterDetails)->getpincodeId($this->pincode , $this->cityId)));
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":line1" , $this->line1 ) ;
+        $stmt->bindParam(":line2" , $this->line2 ) ;
+        $stmt->bindParam(":latitude" , $this->latitude ) ;
+        $stmt->bindParam(":longitude" , $this->longitude ) ;
+        $stmt->bindParam(":placeId" , $this->placeId ) ;
+        $stmt->bindParam(":propertyId" , $this->propertyId ) ;
+        $stmt->bindParam(":pincodeId" , $this->pincodeId) ;
+        if($stmt->execute())
+            return true ;
+
+        return false ;
+    }
 }

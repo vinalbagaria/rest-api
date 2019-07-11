@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+//session_start();
 
 class Login
 {
@@ -40,21 +40,22 @@ class Login
         //if user enters invalid username
             if($this->userId == NULL)
             {
-                echo json_encode(array("message" => "Invalid Username"));
-                echo json_encode(array("message" => "user  do not exist."));
+//                echo json_encode( "Invalid Username");
+//                echo json_encode(array("message" => "user  do not exist."));
 
                 return false;
             }
 
         //STORING INTO SESSION VARIABLES
-        $_SESSION['userId'] = $this->userId;
+//        $_SESSION['userId'] = $this->userId;
 
 
 
         //if user enters valid email id so checking of password takes place
         $getPassword = "SELECT userId,password FROM $this->userCredentialsTable WHERE userId = :userId && password = :password";
         $checkPassword = $this->conn->prepare($getPassword);
-        $checkPassword->bindParam(":userId",  $_SESSION['userId']);
+//        $checkPassword->bindParam(":userId",  $_SESSION['userId']);
+        $checkPassword->bindParam(":userId",  $this->userId );
         $checkPassword->bindParam(":password", $password);
         $checkPassword->execute();
         $temp = $checkPassword->fetch(PDO::FETCH_ASSOC);
@@ -62,14 +63,14 @@ class Login
         //if user enters wrong password
         if(!$temp)
         {
-            echo json_encode(array("message" => " Invalid Password"));
+//            echo json_encode(array("message" => " Invalid Password"));
             return false;
         }
 
         //if username and password both matches
         else
         {
-            echo json_encode(array("message" => "Successful"));
+//            echo json_encode(array("message" => "Successful"));
             return true;
         }
 

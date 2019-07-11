@@ -1,11 +1,11 @@
 <?php
-
+require_once '../propertyObjects/registerPropertyDetails.php' ;
 class GetUserDetails
 {
     private $conn;
-    private $user = "user";
-    private $userAddress = "userAddress";
-    private $userCredentials = "userCredentials";
+    private $userTable = "user";
+    private $userAddressTable = "userAddress";
+    private $userCredentialsTable = "userCredentials";
     private $userRoleTable = " userRole ";
     private $countryTable = "country";
     private $stateTable = "state";
@@ -50,12 +50,24 @@ class GetUserDetails
         if(!$data)
         {
             //INSERT FUNCTION CALL
-            $this->update->addUserRole($this->userId,$this->roleId) ;
+            $this->update->addUserRole($userId,$roleId) ;
             $stmt->execute();
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         echo json_encode(array("message" => $data["userRoleId"]));
         return $data["userRoleId"] ;
+    }
+
+
+
+    function getUserDetails($userId)
+    {
+        $query = "SELECT firstName,lastName,contactNo,emailId,countryId FROM $this->userTable WHERE userId = :userId";
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam( ":userId" , $userId ) ;
+        $stmt-> execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data;
     }
 
 }

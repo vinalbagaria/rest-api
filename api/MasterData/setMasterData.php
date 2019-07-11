@@ -67,14 +67,6 @@ if (
         echo json_encode("cannot be inserted");
 }
 
-//if (
-//!empty($data->configurationType)
-//) {
-//    if ($setMaster->addConfigurationType($data->configurationType))
-//        echo json_encode("Configuration Type is inserted successfully");
-//    else
-//        echo json_encode("cannot be inserted");
-//}
 
 if (
     !empty($data->socialMediaName)
@@ -100,7 +92,7 @@ if
 ){
     $roleId = $getPropertyMaster->getRoleId($data->roleType);
     if ($roleId)
-        echo json_encode($roleId);
+        echo json_encode("Role updated");
     else
         echo json_encode("cannot be inserted");
 }
@@ -111,7 +103,7 @@ if
 ){
     $configurationId = $getPropertyMaster->getConfigurationId($data->configurationType);
     if ($configurationId)
-        echo json_encode($configurationId);
+        echo json_encode("Configuration updated");
     else
         echo json_encode("cannot be inserted");
 }

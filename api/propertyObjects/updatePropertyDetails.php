@@ -4,7 +4,7 @@ require_once '../MasterData/getPropertyMasterData.php' ;
 require_once 'registerPropertyDetails.php' ;
 require_once '../userObjects/getUserDetails.php' ;
 require_once 'getPropertyDetails.php';
-require_once '../MasterData/getMasterData.php' ;
+require_once '../MasterData/getMasterData.php';
 class UpdatePropertyDetails
 
 {

@@ -6,7 +6,7 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once '../propertyObjects/registerPropertyDetails.php';
-include_once '../config/database.php' ;
+include_once '../config/database.php';
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -27,7 +27,6 @@ if(
     !empty($data->propertyStatus) &&
     !empty($data->propertyType) &&
     !empty($data->configurationType) &&
-    !empty($data->userId) &&
     !empty($data->floorNo) &&
     !empty($data->roleType) &&
     !empty($data->floors) &&
@@ -65,73 +64,84 @@ if(
     $register->longitude=$data->longitude;
     $register->placeId=$data->placeId;
     $register->amenity = $data->amenity;
-    if(!empty($data->facing))
-        $register->facing = $data->facing ;
-    if(!empty($data->ageOfProperty))
-        $register->ageOfProperty = $data->ageOfProperty ;
-    if(!empty($data->description))
-        $register->description= $data->description ;
-    if(!empty($data->possessionDate))
-        $register->possessionDate = $data->possessionDate ;
-    if(!empty($data->noOfBathrooms))
-        $register->noOfBathrooms  = $data->noOfBathrooms ;
-    if(!empty($data->noOfBalconies))
-        $register->noOfBalconies =$data->noOfBalconies ;
-    if(!empty($data->reraNo))
-    $register->reraNo = $data->reraNo;
-
-    //INSERTING INTO PROPERTY ADDRESS TABLE 
-    if($register->addPropertyAddress()){
-        echo json_encode(array("address" => "Updated Successfully"));
-    }else{
-        echo json_encode(array("address" => "Update Unsuccessful"));
-    }
+//    echo json_encode($register->amenity);
+//    if(!empty($data->facing))
+//        $register->facing = $data->facing ;
+//    if(!empty($data->ageOfProperty))
+//        $register->ageOfProperty = $data->ageOfProperty ;
+//    if(!empty($data->description))
+//        $register->description= $data->description ;
+//    if(!empty($data->possessionDate))
+//        $register->possessionDate = $data->possessionDate ;
+//    if(!empty($data->noOfBathrooms))
+//        $register->noOfBathrooms  = $data->noOfBathrooms ;
+//    if(!empty($data->noOfBalconies))
+//        $register->noOfBalconies =$data->noOfBalconies ;
+//    if(!empty($data->reraNo))
+//    $register->reraNo = $data->reraNo;
 
     $register->carpetArea = $data->carpetArea ;
     $register->baseValue = $data->baseValue ;
     $register->unitName = $data->unitName ;
 
-    if(!empty($data->pricePerUnit))
-        $register->pricePerUnit = $data->pricePerUnit ;
-    if(!empty($data->buildUpArea))
-        $register->buildUpArea = $data->buildUpArea ;
-    if(!empty($data->registration))
-        $register->registration = $data->registration ;
-    if(!empty($data->stampDuty))
-        $register->stampDuty = $data->stampDuty ;
-    if(!empty($data->maintenance))
-        $register->maintenance = $data->maintenance ;
+//    if(!empty($data->pricePerUnit))
+//        $register->pricePerUnit = $data->pricePerUnit ;
+//    if(!empty($data->buildUpArea))
+//        $register->buildUpArea = $data->buildUpArea ;
+//    if(!empty($data->registration))
+//        $register->registration = $data->registration ;
+//    if(!empty($data->stampDuty))
+//        $register->stampDuty = $data->stampDuty ;
+//    if(!empty($data->maintenance))
+//        $register->maintenance = $data->maintenance ;
 
-    //INSERTING INTO PROPERTY DETAILS TABLE
+
+
+
+//
+//    //INSERTING INTO PROPERTY ADDRESS TABLE
+//    if($register->addPropertyAddress()){
+////        echo json_encode("Addresss Successfully");
+//    }else{
+////        echo json_encode("Update Unsuccessful");
+//    }
+//
+//
+//
+//    //INSERTING INTO PROPERTY DETAILS TABLE
+//    if($register->registerPropertyDetails())
+//    {
+//        echo json_encode( "Property Details filled");
+//    }
+//    else
+//    {
+//        echo json_encode(array("message" => "property details unsuccessful"));
+//    }
+//
+//    if($register->addPropertyAmenity())
+//    {
+//        echo json_encode(array("message" => "Added amenities Successfully"));
+//    }
+//    else
+//    {
+//        //Delete from propertyDetails Table (left)
+//        echo json_encode(array("message" => "amenities Unsuccessful"));
+//    }
     if($register->registerPropertyDetails())
     {
-        echo json_encode(array("message" => "Property Details filled"));
+        if ($register->addPropertyAddress() &&
+            $register->addPropertyAmenity() &&
+            $register->addPropertyPrice()){
+            echo json_encode("Added property Price Successfully");
+        }
     }
     else
     {
-        echo json_encode(array("message" => "property details unsuccessful"));
-    }
-
-    if($register->addPropertyAmenity())
-    {
-        echo json_encode(array("message" => "Added amenities Successfully"));
-    }
-    else
-    {
-        //Delete from propertyDetails Table (left)
-        echo json_encode(array("message" => "amenities Unsuccessful"));
-    }
-    if($register->addPropertyPrice())
-    {
-        echo json_encode(array("message" => "Added property Price Successfully"));
-    }
-    else
-    {
-        //Delete from propertyDetails Table (left)
-        echo json_encode(array("message" => "property Price Unsuccessful"));
+        $register->deleteProperty($propertyId);
+        echo json_encode("property Price Unsuccessful");
     }
 }
 else
 {
-    echo json_encode(array("message" =>"Incomplete Data"));
+    echo json_encode("Incomplete Data");
 }

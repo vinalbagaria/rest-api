@@ -12,46 +12,37 @@ $data = json_decode(file_get_contents("php://input"));
 
 if(
     !empty($data->userId) &&
-    !empty($data->firstName)
+    !empty($data->firstName)&&
+    !empty($data->lastName)
 ){
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
     $updateProfile = new UpdateProfile($db);
-//    echo json_encode(array("message"=>$data->newPassword));
-    if($updateProfile->changeFirstName($data->userId,$data->firstName))
-        echo json_encode(array("message"=>$data->firstName));
+    if($updateProfile->changeFirstName($data->userId,$data->firstName) && $updateProfile->changeLastName($data->userId , $data->lastName))
+        echo json_encode("Update Successful");
     else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }
-if(
-    !empty($data->userId) &&
-    !empty($data->lastName)
-){
 
-    if($updateProfile->changeLastName($data->userId,$data->lastName))
-        echo json_encode(array("message"=>$data->lastName));
-    else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
-}
 if(
     !empty($data->userId) &&
     !empty($data->contactNo)
 ){
     //    Verify otp
     if($updateProfile->changeContactNo($data->userId,$data->contactNo))
-        echo json_encode(array("message"=>$data->contactNo));
+        echo json_encode($data->contactNo);
     else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }
 if(
-    !empty($data->userId) &&
+    !empty($data->userId)  &&
     !empty($data->emailId)
 ){
     //    Verify otp
     if($updateProfile->changeEmailId($data->userId,$data->emailId))
-        echo json_encode(array("message"=>$data->emailId));
+        echo json_encode($data->emailId);
     else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }
 if(
     !empty($data->userAddressId) &&
@@ -62,9 +53,9 @@ if(
     !empty($data->placeId)
 ){
     if( $updateProfile->changeAddress($data->userAddressId,$data->line1,$data->line2,$data->latitude,$data->longitude,$data->placeId ))
-        echo json_encode(array("message"=>"Update Successful"));
+        echo json_encode("Update Successful");
     else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }
 if(
     !empty($data->pincode) &&
@@ -76,8 +67,8 @@ if(
     !empty($data->userAddressId)
 ){
     if( $updateProfile->changeCountryId($data->userId,$data->country) && $updateProfile->changePincodeId($data->userAddressId,$data->pincode,$data->city,$data->state,$data->country))
-        echo json_encode(array("message"=>"Update Successful"));
+        echo json_encode("Update Successful");
     else
-        echo json_encode(array("message"=>"Update Unsuccessful"));
+        echo json_encode("Update Unsuccessful");
 }
 

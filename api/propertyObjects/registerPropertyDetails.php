@@ -138,65 +138,42 @@ class RegisterPropertyDetails
         
         $stmt = $this->conn->prepare($query) ;
         $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
-        echo json_encode($this->configurationId) ;
         $this->userRoleId = $this->master->getRoleId($this->roleType) ;
-        echo json_encode(array("userRoleId" => $this->userRoleId) );
         $this->propertyTypeId = $this->master->getPropertyTypeId($this->propertyType) ;
 
         //SANITIZE
         $this->propertyName = htmlspecialchars(strip_tags($this->propertyName));
-        echo json_encode(array("message" => $this->propertyName));
         $this->propertyStatus = htmlspecialchars(strip_tags($this->propertyStatus));
-        echo json_encode(array("message" => $this->propertyStatus));
         $this->reraNo = htmlspecialchars(strip_tags($this->reraNo));
-        echo json_encode(array("message" => $this->reraNo));
 
         $this->propertyTypeId = htmlspecialchars(strip_tags(($this->master)->getPropertyTypeId($this->propertyType)));
-        echo json_encode(array("message" => $this->propertyTypeId));
 
         $this->configurationId = htmlspecialchars(strip_tags(($this->master)->getConfigurationId($this->configurationType)));
-        echo json_encode(array("message" => $this->configurationId));
 
         $this->userId = htmlspecialchars(strip_tags($this->userId));
-        echo json_encode(array("message" => $this->userId));
 
         $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
-        echo json_encode(array("message" => $this->roleId));
 
         $this->addUserRole($this->userId,$this->roleId);        
-        echo json_encode(array("message" => "neww start"));
-        
+
         $this->userRoleId = htmlspecialchars(strip_tags(($this->findMaster)->getUserRoleId($this->userId)));
-        echo json_encode(array("message" => $this->userRoleId));
 
         $this->floors = htmlspecialchars(strip_tags($this->floors));
-        echo json_encode(array("message" => $this->floors));
         $this->floorNo = htmlspecialchars(strip_tags($this->floorNo));
-        echo json_encode(array("message" => $this->floorNo));
 
         $this->carParking = htmlspecialchars(strip_tags($this->carParking));
-        echo json_encode(array("message" => $this->carParking));
-
         $this->furnishedType = htmlspecialchars(strip_tags($this->furnishedType));
-        echo json_encode(array("message" => $this->furnishedType));
 
         $this->ageOfProperty = htmlspecialchars(strip_tags($this->ageOfProperty));
-        echo json_encode(array("message" => $this->ageOfProperty));
 
         $this->description = htmlspecialchars(strip_tags($this->description));
-        echo json_encode(array("message" => $this->description));
-
         $this->possessionDate = htmlspecialchars(strip_tags($this->possessionDate));
-        echo json_encode(array("message" => $this->possessionDate));
 
         $this->facing = htmlspecialchars(strip_tags($this->facing));
-        echo json_encode(array("message" => $this->facing));
 
         $this->noOfBathrooms = htmlspecialchars(strip_tags($this->noOfBathrooms));
-        echo json_encode(array("message" => $this->noOfBathrooms));
 
         $this->noOfBalconies = htmlspecialchars(strip_tags($this->noOfBalconies));
-        echo json_encode(array("message" => $this->noOfBalconies));
 
 
         //BINDING PARAMS
@@ -243,13 +220,12 @@ class RegisterPropertyDetails
 
         $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->propertyId = $tempPropertyId["propertyId"];
-//        echo json_encode( $this->propertyId);
 
         //FOR EACH AMENITY ID THERE WILL BE INSERTION
         foreach($this->amenityId as $key => $value)
         {
             $this->temp = $value;
-            echo json_encode($this->temp);
+
             $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId) VALUES( :temp , :propertyId )";
 
             $stmt1 = $this->conn->prepare($query1) ;
@@ -267,33 +243,35 @@ class RegisterPropertyDetails
     }
 
     function addPropertyPrice()
-{
-    $query = "INSERT INTO $this->propertyPriceTable
-    ( pricePerUnit , carpetArea , propertyId , buildUpArea , baseValue , registration , stampDuty , maintenance , unitId) 
-    VALUES ( :pricePerUnit , :carpetArea , :propertyId , :buildUpArea , :baseValue , :registration , :stampDuty ,
-     :maintenance , :unitId ) " ;
-    $this->unitId = $this->master->getUnitId( $this->unitName );
+    {
+         $query = "INSERT INTO $this->propertyPriceTable
+        ( pricePerUnit , carpetArea , propertyId , buildUpArea , baseValue , registration , stampDuty , maintenance , unitId) 
+        VALUES ( :pricePerUnit , :carpetArea , :propertyId , :buildUpArea , :baseValue , :registration , :stampDuty ,
+        :maintenance , :unitId ) " ;
+        $this->unitId = $this->master->getUnitId( $this->unitName );
 
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit ) ;
-    echo json_encode($this->propertyId);
-    $stmt->bindParam(":carpetArea" , $this->carpetArea ) ;
-    $stmt->bindParam(":propertyId" , $this->propertyId ) ;
-    $stmt->bindParam(":buildUpArea" , $this->buildUpArea ) ;
-    echo json_encode($this->propertyId);
-    echo json_encode($this->propertyId);
-    echo json_encode($this->propertyId);
-    $stmt->bindParam(":baseValue" , $this->baseValue ) ;
-    $stmt->bindParam(":registration" , $this->registration ) ;
-    $stmt->bindParam(":stampDuty" , $this->stampDuty ) ;
-    $stmt->bindParam(":maintenance" , $this->maintenance ) ;
-    $stmt->bindParam(":unitId" , $this->unitId ) ;
-    if($stmt->execute())
-        return true ;
-    else
-        return false;
-}
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit ) ;
+        $stmt->bindParam(":carpetArea" , $this->carpetArea ) ;
+        $stmt->bindParam(":propertyId" , $this->propertyId ) ;
+        $stmt->bindParam(":buildUpArea" , $this->buildUpArea ) ;
+        $stmt->bindParam(":baseValue" , $this->baseValue ) ;
+        $stmt->bindParam(":registration" , $this->registration ) ;
+        $stmt->bindParam(":stampDuty" , $this->stampDuty ) ;
+        $stmt->bindParam(":maintenance" , $this->maintenance ) ;
+        $stmt->bindParam(":unitId" , $this->unitId ) ;
+        if($stmt->execute())
+                return true ;
+        else
+            return false;
+    }
 
-
+    function deleteProperty($propertyId)
+    {
+        $query = "DELETE FROM $this->propertyDetailsTable WHERE propertyId = :propertyId " ;
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":propertyId" , $propertyId ) ;
+        $stmt->execute();
+    }
 }
 

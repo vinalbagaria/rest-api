@@ -148,5 +148,7 @@ class GetPropertyMasterData
         }
         return $existAmenity["amenityId"];
     }
+
+
 }
 

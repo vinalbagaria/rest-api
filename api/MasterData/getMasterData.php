@@ -1,9 +1,8 @@
 <?php
 
-
 require_once 'updateMasterData.php';
 
-class GetMasterData
+class   GetMasterData
 {
     private $conn;
     private $countryTable = "country";
@@ -22,7 +21,7 @@ class GetMasterData
     public function __construct($db)
     {
         $this->conn = $db;
-        $this->updateMaster = new UpdateMasterData( $db ) ;
+        $this->updateMaster = new UpdateMasterData( $db );
     }
 
     //FUNCTION FOR GETTING COUNTRYID
@@ -44,7 +43,7 @@ class GetMasterData
         $exist1= $this->conn->prepare($query);
         $exist1->bindParam(":state",  $state);
         $exist1->execute();
-        $stateExist=$exist1->fetch(PDO:: FETCH_ASSOC);
+        $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
 
         if( !$stateExist )
         {
@@ -106,95 +105,95 @@ class GetMasterData
         return $data;
     }
 
-     //FUNCTION FOR GETTING LIST OF ROLES
-     public function getRoles()
-     {
-         $query = " SELECT roleType FROM $this->roleTable ";
-         $exist = $this->conn->prepare($query);
-         $exist->execute();
-         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-             $data[]=$row;
-             
-         }
-         return $data;
-     }
+    //FUNCTION FOR GETTING LIST OF ROLES
+    public function getRoles()
+    {
+        $query = " SELECT roleType FROM $this->roleTable ";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["roleType"];
 
-      //FUNCTION FOR GETTING LIST OF DOCUMENTS
-      public function getDocuments()
-      {
-          $query = " SELECT documentName FROM  $this->documentTypeTable";
-          $exist = $this->conn->prepare($query);
-          $exist->execute();
-          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-              $data[]=$row;
-              
-          }
-          return $data;
-      }
-
-       //FUNCTION FOR GETTING LIST OF UNITS
-      public function getUnits()
-      {
-          $query = " SELECT unitName FROM $this->unitTable";
-          $exist = $this->conn->prepare($query);
-          $exist->execute();
-          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-              $data[]=$row;   
-          }
-          return $data;
-      }
-
-      //FUNCTION FOR GETTING LIST OF AMENITIES
-      public function getAmenities()
-      {
-          $query = " SELECT amenity FROM  $this->amenitiesTable";
-          $exist = $this->conn->prepare($query);
-          $exist->execute();
-          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-              $data[]=$row;
-              
-          }
-          return $data;
-      }
-
-      //FUNCTION FOR GETTING LIST OF PROPERTY TYPE
-      public function getPropertyType()
-      {
-          $query = " SELECT propertyType FROM  $this->propertyTypeTable";
-          $exist = $this->conn->prepare($query);
-          $exist->execute();
-          while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-              $data[]=$row;
-              
-          }
-          return $data;
-      }
-
-       //FUNCTION FOR GETTING LIST OF CONFIGURATIONS
-       public function getConfiguration()
-       {
-           $query = " SELECT configurationType FROM  $this->configurationTable";
-           $exist = $this->conn->prepare($query);
-           $exist->execute();
-           while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-               $data[]=$row;
-               
-           }
-           return $data;
-       }
-
-        //FUNCTION FOR GETTING LIST OF SOCIAL MEDIA NAMES
-        public function getSocialMediaName()
-        {
-            $query = " SELECT socialMediaName FROM $this->socialMediaTable";
-            $exist = $this->conn->prepare($query);
-            $exist->execute();
-            while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-                $data[]=$row;
-                
-            }
-            return $data;
         }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF DOCUMENTS
+    public function getDocuments()
+    {
+        $query = " SELECT documentName FROM  $this->documentTypeTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["documentName"];
+
+        }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF UNITS
+    public function getUnits()
+    {
+        $query = " SELECT unitName FROM $this->unitTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["unitName"];
+        }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF AMENITIES
+    public function getAmenities()
+    {
+        $query = " SELECT amenity FROM  $this->amenitiesTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["amenity"];
+
+        }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF PROPERTY TYPE
+    public function getPropertyType()
+    {
+        $query = " SELECT propertyType FROM  $this->propertyTypeTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["propertyType"];
+
+        }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF CONFIGURATIONS
+    public function getConfiguration()
+    {
+        $query = " SELECT configurationType FROM  $this->configurationTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["configurationType"];
+
+        }
+        return $data;
+    }
+
+    //FUNCTION FOR GETTING LIST OF SOCIAL MEDIA NAMES
+    public function getSocialMediaName()
+    {
+        $query = " SELECT socialMediaName FROM $this->socialMediaTable";
+        $exist = $this->conn->prepare($query);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data[]=$row["socialMediaName"];
+
+        }
+        return $data;
+    }
 
     //FUNCTION FOR GETTING LIST OF STATES
     public function getStates( $countryId )
@@ -204,22 +203,34 @@ class GetMasterData
         $exist->bindParam(":countryId",$countryId);
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-            $data[]=$row;
+            $data[]=$row["state"];
         }
         return $data;
     }
 
     //FUNCTION FOR GETTING LIST OF CITIES
-    public function getCities( $stateId )
+    public function getCities($stateId)
     {
         $query = " SELECT city FROM $this->cityTable WHERE stateId = :stateId ";
         $exist = $this->conn->prepare($query);
         $exist->bindParam(":stateId",$stateId);
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
-            $data[]=$row;
+            $data[]=$row["city"];
         }
         return $data;
+    }
+
+    public function getCountry($countryId)
+    {
+        $query = "SELECT country FROM $this->countryTable WHERE countryId = :countryId";
+        $exist = $this->conn->prepare($query);
+        $exist->bindParam(":countryId",$countryId);
+        $exist->execute();
+        while($row = $exist->fetch(PDO::FETCH_ASSOC)){
+            $data = $row ;
+        }
+        return $data ;
     }
 
 }

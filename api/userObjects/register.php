@@ -1,17 +1,14 @@
 <?php
-require_once '../MasterData/getMasterData.php';
+include_once '../MasterData/getMasterData.php';
 
 class Register
 {
     //database connection and table name
     private $conn;
     private $user = "user";
-    private $userAddress = "userAddress";
+//    private $userAddress = "userAddress";
     private $userCredentials = "userCredentials";
-    private $countryTable = "country";
-    private $stateTable = "state";
-    private $cityTable = "city";
-    private $pincodeTable = "pincode";
+
 
     //object properties
     public $firstName;
@@ -53,7 +50,6 @@ class Register
         $userIdFetchx->execute();
         $forUserId = $userIdFetchx->fetch(PDO::FETCH_ASSOC);
         $this->userId=$forUserId["userId"];
-        echo json_encode(array("message"=> $this->userId) );
     }
 
     function registerUser(){
@@ -62,13 +58,13 @@ class Register
         //INSERT STATEMENTS
         $query1= "INSERT INTO  $this->user (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
 
-        $query2="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
+//        $query2="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
 
         $query3="INSERT INTO $this->userCredentials(userId,password) VALUES(:userId,:password)";
 
         //PREPARE STATEMENTS
         $stmt1= $this->conn->prepare($query1);
-        $stmt2= $this->conn->prepare($query2);
+//        $stmt2= $this->conn->prepare($query2);
         $stmt3= $this->conn->prepare($query3);
 
         //SANITIZE
@@ -80,29 +76,25 @@ class Register
 
         //FOR COUNTRY
         $this->countryId=htmlspecialchars(strip_tags(($this->master)->getCountryId($this->country)));
-        echo json_encode(array("message" => $this->countryId));
 
         //FOR STATE
-        $this->state=htmlspecialchars(strip_tags($this->state));
-        $this->stateId=htmlspecialchars(strip_tags(($this->master)->getStateId($this->state , $this->countryId)));
-        echo json_encode(array("message" => $this->stateId));
-
-        //FOR CITY
-        $this->city=htmlspecialchars(strip_tags($this->city));
-        $this->cityId=htmlspecialchars(strip_tags(($this->master)->getCityId($this->city , $this->stateId)));
-        echo json_encode(array("message" => $this->cityId));
-
-        //FOR PINCODE
-        $this->pincode=htmlspecialchars(strip_tags($this->pincode));
-        $this->pincodeId=htmlspecialchars(strip_tags(($this->master)->getpincodeId($this->pincode , $this->cityId)));
-        echo json_encode(array("message" => $this->pincodeId));
-
-        //FOR REMAINING ADDRESS
-        $this->line1=htmlspecialchars(strip_tags($this->line1));
-        $this->line2=htmlspecialchars(strip_tags($this->line2));
-        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
-        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
-        $this->placeId=htmlspecialchars(strip_tags($this->placeId));
+//        $this->state=htmlspecialchars(strip_tags($this->state));
+//        $this->stateId=htmlspecialchars(strip_tags(($this->master)->getStateId($this->state , $this->countryId)));
+//
+//        //FOR CITY
+//        $this->city=htmlspecialchars(strip_tags($this->city));
+//        $this->cityId=htmlspecialchars(strip_tags(($this->master)->getCityId($this->city , $this->stateId)));
+//
+//        //FOR PINCODE
+//        $this->pincode=htmlspecialchars(strip_tags($this->pincode));
+//        $this->pincodeId=htmlspecialchars(strip_tags(($this->master)->getpincodeId($this->pincode , $this->cityId)));
+//
+//        //FOR REMAINING ADDRESS
+//        $this->line1=htmlspecialchars(strip_tags($this->line1));
+//        $this->line2=htmlspecialchars(strip_tags($this->line2));
+//        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+//        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+//        $this->placeId=htmlspecialchars(strip_tags($this->placeId));
 
         //FOR PASSWORD
         $this->password=htmlspecialchars(strip_tags($this->password));
@@ -119,24 +111,24 @@ class Register
         {
             $this->getUserId();
 
-            //USER ADDRESS TABLE
-            $stmt2->bindParam(":userId", $this->userId);
-            $stmt2->bindParam(":line1", $this->line1);
-            $stmt2->bindParam(":line2", $this->line2);
-            $stmt2->bindParam(":latitude", $this->latitude);
-            $stmt2->bindParam(":longitude", $this->longitude);
-            $stmt2->bindParam(":placeId", $this->placeId);
-
-            $stmt2->bindParam(":pincodeId", $this->pincodeId);
+//            USER ADDRESS TABLE
+//            $stmt2->bindParam(":userId", $this->userId);
+//            $stmt2->bindParam(":line1", $this->line1);
+//            $stmt2->bindParam(":line2", $this->line2);
+//            $stmt2->bindParam(":latitude", $this->latitude);
+//            $stmt2->bindParam(":longitude", $this->longitude);
+//            $stmt2->bindParam(":placeId", $this->placeId);
+//
+//            $stmt2->bindParam(":pincodeId", $this->pincodeId);
 
             //USER CREDENTIALS TABLE
             $stmt3->bindParam("userId", $this->userId);
-            $stmt3->bindParam("passwod", $this->password);
+            $stmt3->bindParam("password", $this->password);
 
             //EXECUTE STATEMENTS
 
 
-            if ( $stmt2->execute() && $stmt3->execute())
+            if ( $stmt3->execute())
                 return true;
             else
             {

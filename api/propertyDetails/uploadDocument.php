@@ -5,7 +5,7 @@
  header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
  $response = array();
-require_once '../config/database.php' ;
+require_once '../config/database.php';
 require_once '../MasterData/getPropertyMasterData.php';
 
 $instance = ConnectDb::getInstance();

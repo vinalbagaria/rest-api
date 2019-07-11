@@ -1,12 +1,12 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods:PUT");
+header("Access-Control-Allow-Methods:POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require_once '../propertyObjects/updatePropertyDetails.php';
-require_once '../config/database.php' ;
+require_once '../config/database.php';
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -96,27 +96,27 @@ if(
 
     if($update->updatePropertyDetails())
     {
-        echo json_encode(array("message" => "Updated property details Successfully "));
+        echo json_encode( "Updated property details Successfully ");
     }else
-        echo json_encode(array("message" => "property details Unsuccessful "));
+        echo json_encode("property details Unsuccessful ");
 
     if($update->updatePropertyAmenity())
     {
-        echo json_encode(array("message" => "Updated amenity Successfully "));
+        echo json_encode( "Updated amenity Successfully ");
     }else
-        echo json_encode(array("message" => "amenity Unsuccessful "));
+        echo json_encode( "amenity Unsuccessful ");
 
     if($update->updatePropertyPrice()){
-        echo json_encode(array("message" => "Property Price table updated Successfully"));
+        echo json_encode("Property Price table updated Successfully");
     }else
-        echo json_encode(array("message" => "Property Price table not updated Successfully"));
+        echo json_encode("Property Price table not updated Successfully");
 
     if($update->updatePropertyAddress()){
-        echo json_encode(array("message" => "Address table updated Successfully"));
+        echo json_encode( "Address table updated Successfully");
     }else
-        echo json_encode(array("message" => "Address table not updated Successfully"));
+        echo json_encode( "Address table not updated Successfully");
 
 }else
 {
-    echo json_encode(array("message" => "Incomplete Data "));
+    echo json_encode( "Incomplete Data");
 }

@@ -1,76 +1,56 @@
 <?php
-
-//session_start();
-
 class Login
 {
 
-    // database connection and table name
+    // DATABASE CONNECTION AND TABLE NAME
     private $conn;
     private $userTable = "user";
     private $userCredentialsTable = "userCredentials";
 
-    // object properties
+    // OBJECT PROPERTIES
     public $userId;
     public $email;
     public $password;
 
-    // constructor with $db as database connection
+    // DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
-    // read user
+    // READ USER
     public function checkLogin($emailId,$password)
     {
         $query = "SELECT userId FROM $this->userTable WHERE emailId = :emailId ";
-
-        // prepare query statement
         $findUserId = $this->conn->prepare($query);
         $findUserId->bindParam(":emailId", $emailId);
-
-        // execute query
         $findUserId->execute();
         $temp = $findUserId->fetch(PDO::FETCH_ASSOC);
-
         $this->userId = $temp["userId"];
 
+        //CHECKING VALID OR INVALID
+        if($this->userId == NULL)
+        {
+            return false;
+        }
 
-        //if user enters invalid username
-            if($this->userId == NULL)
-            {
-//                echo json_encode( "Invalid Username");
-//                echo json_encode(array("message" => "user  do not exist."));
-
-                return false;
-            }
-
-        //STORING INTO SESSION VARIABLES
-//        $_SESSION['userId'] = $this->userId;
-
-
-
-        //if user enters valid email id so checking of password takes place
+        // IF USER ENTERS VALID EMAILID THEN
         $getPassword = "SELECT userId,password FROM $this->userCredentialsTable WHERE userId = :userId && password = :password";
         $checkPassword = $this->conn->prepare($getPassword);
-//        $checkPassword->bindParam(":userId",  $_SESSION['userId']);
         $checkPassword->bindParam(":userId",  $this->userId );
         $checkPassword->bindParam(":password", $password);
         $checkPassword->execute();
         $temp = $checkPassword->fetch(PDO::FETCH_ASSOC);
 
-        //if user enters wrong password
+        //CHECKING OF PASSWORD
         if(!$temp)
         {
-//            echo json_encode(array("message" => " Invalid Password"));
             return false;
         }
 
-        //if username and password both matches
+        // IF BOTH MATCHES
         else
         {
-//            echo json_encode(array("message" => "Successful"));
             return true;
         }
 

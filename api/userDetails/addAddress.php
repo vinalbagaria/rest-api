@@ -15,29 +15,29 @@ require_once '../userObjects/register.php';
 //GET POSTED DATA
 $data = json_decode(file_get_contents("php://input"));
 
-// CHECKING DATA IS EMPTY OR NOT
-if (
-    !empty($data->firstName) &&
-    !empty($data->lastName) &&
-    !empty($data->contactNo) &&
-    !empty($data->emailId) &&
-    !empty($data->country) &&
-    !empty($data->password)
-) {
+if (!empty($data->state) &&
+    !empty($data->city) &&
+    !empty($data->pincode) &&
+    !empty($data->line1) &&
+    !empty($data->line2) &&
+    !empty($data->latitude) &&
+    !empty($data->longitude) &&
+    !empty($data->placeId)
+){
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
     $user = new Register($db);
 
-    // SET PRODUCT PROPERTY VALUES
-    $user->firstName = $data->firstName;
-    $user->lastName=$data->lastName;
-    $user->contactNo=$data->contactNo;
-    $user->emailId=$data->emailId;
+    $user->state = $data->state;
+    $user->city = $data->city;
+    $user->pincode = $data->pincode;
+    $user->line1 = $data->line1;
+    $user->line2 = $data->line2;
+    $user->latitude = $data->latitude;
+    $user->longitude = $data->longitude;
+    $user->placeId = $data->placeId;
 
-    $user->country=$data->country;
-    $user->password=$data->password;
-
-    if ($user->registerUser()) {
+    if ($user->addUserAddress()) {
         echo json_encode( "user was created.");
 
     }
@@ -48,3 +48,5 @@ if (
 else {
     echo json_encode("Unable to create user. Data is incomplete.");
 }
+
+

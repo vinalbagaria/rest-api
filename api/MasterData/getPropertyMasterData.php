@@ -1,8 +1,9 @@
 <?php
-
 require_once 'updateMasterData.php';
+
 class GetPropertyMasterData
 {
+    // DATABASE CONNECTION AND TABLE NAME
     private $conn ;
     private $roleTable = "role" ;
     private $amenitiesTable = "amenities" ;
@@ -11,8 +12,11 @@ class GetPropertyMasterData
     private $propertyTypeTable = "propertyType" ;
     private $socialMediaTable = "socialMedia";
     private $unitTable = "unit";
+    private $userRoleTable = "userRole";
+
     private $updateMaster ;
-    
+
+    // CONSTRUCTOR WITH $db AS DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
@@ -50,7 +54,6 @@ class GetPropertyMasterData
             $this->updateMaster->addConfigurationType($configurationType);
             $stmt->execute();
             $existConfiguration=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
         return $existConfiguration["configurationId"];
     }
@@ -69,7 +72,6 @@ class GetPropertyMasterData
             $this->updateMaster->addPropertyType($propertyType);
             $stmt->execute();
             $existPropertyType=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
         return $existPropertyType["propertyTypeId"];
     }
@@ -88,7 +90,6 @@ class GetPropertyMasterData
             $this->updateMaster->addDocumentType($documentName);
             $stmt->execute();
             $existDocumentName=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
         return $existDocumentName["documentTypeId"];
     }
@@ -107,7 +108,6 @@ class GetPropertyMasterData
             $this->updateMaster->addUnit($unitName);
             $stmt->execute();
             $existUnitName=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
         return $existUnitName["unitId"];
     }
@@ -126,12 +126,11 @@ class GetPropertyMasterData
             $this->updateMaster->addSocialMedia($socialMediaName);
             $stmt->execute();
             $existSocialMediaName=$stmt->fetch(PDO::FETCH_ASSOC);
-
         }
         return $existSocialMediaName["socialMediaId"];
     }
 
-    //GET AMENITIY ID USING AMENITY NAME    
+    //GET AMENITIY ID USING AMENITY NAME
     function getAmenityId($amenity)
     {
         $query = "SELECT amenityId from $this->amenitiesTable WHERE amenity = :amenity ";
@@ -148,7 +147,46 @@ class GetPropertyMasterData
         }
         return $existAmenity["amenityId"];
     }
+    function getUnit($unitId)
+    {
+        $query = "SELECT unitName FROM $this->unitTable WHERE unitId = :unitId ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":unitId",$unitId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data;
+    }
 
+    // GET CONFIGURATION FOR A PARTICULAR CONFIGURATION ID
+    function getConfiguration($configurationId)
+    {
+        $query = "SELECT configuration FROM $this->configurationTable WHERE configurationId = :configurationId ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":configurationId",$configurationId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data;
+    }
 
+    // GET PROPERTY TYPE FOR A PARTICULAR PROPERTY TYPE ID
+    function getPropertyType($propertyTypeId)
+    {
+        $query = "SELECT propertyType FROM $this->propertyTypeTable WHERE propertyTypeId = :propertyTypeId ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":propertyTypeId",$propertyTypeId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data;
+    }
+
+    //FUNCTION TO GET ROLE OF A USER
+    function getRoleType($userRoleId)
+    {
+        $query = "SELECT roleType from $this->roleTable WHERE roleId IN (SELECT roleId FROM $this->userRoleTable WHERE userRoleId = :userRoleId)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":userRoleId",$userRoleId);
+        $stmt->execute();
+        $data=$stmt->fetch(PDO::FETCH_ASSOC);
+        return $data ;
+    }
 }
-

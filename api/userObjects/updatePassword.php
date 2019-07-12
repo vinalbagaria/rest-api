@@ -2,40 +2,40 @@
 
 class UpdatePassword
 {
+    // DATABASE CONNECTION AND TABLE NAME
     private $userCredentials="userCredentials";
     private $conn;
 
+    // CONSTRUCTOR WITH $db AS DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
+    // TO CHANGE PASSWORD
     public function changePassword($userId, $oldPassword, $newPassword)
     {
-        $query1="SELECT password FROM $this->userCredentials WHERE userId=:userId ";
-        $stmt = $this->conn->prepare($query1);
+        $query ="SELECT password FROM $this->userCredentials WHERE userId = :userId ";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userId",$userId);
         $stmt->execute();
         $password=$stmt->fetch(PDO::FETCH_ASSOC);
 
-        if( $oldPassword == $password )
+        //IF PASSWORD MATCHES WITH THE OLD PASSWORD
+        if( $oldPassword == $password['password'] )
         {
-            $query2 = "UPDATE userCredentials SET password = :newPassword WHERE userId = :userId";
-            $stmt1 = $this->conn->prepare($query2);
-
-            $stmt1->bindParam(":userId",$userId);
-            $stmt1->bindParam(":newPassword",$newPassword);
-            if($stmt1->execute())
-//                return true;
-                echo json_encode(array("message"=>"Password Updated successfully."));
+            $query = "UPDATE userCredentials SET password = :newPassword WHERE userId = :userId";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":userId",$userId);
+            $stmt->bindParam(":newPassword",$newPassword);
+            if($stmt->execute())
+                echo json_encode("Password Updated successfully.");
             else
-//                return false;
-                echo json_encode(array("message"=>"Error in updating password.try again"));
+                echo json_encode("Error in updating password.try again");
 
         } else
         {
-            echo json_encode(array("message"=> "invalid password"));
+            echo json_encode("invalid password");
         }
     }
-
 }

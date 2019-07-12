@@ -12,8 +12,7 @@ require_once '../config/database.php';
 require_once '../userObjects/login.php';
 
 $data = json_decode(file_get_contents("php://input"));
-//$emailId =  $_GET['emailId'] ;
-//$password = $_GET['password'] ;
+
 //CHECKING DATA IS EMPTY OR NOT
 if(
     !empty($data->emailId) &&
@@ -25,8 +24,8 @@ if(
     // INSTANTIATE DATABASE
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
-
     $user = new Login($db);
+
     //checkLogin function to validate the user
     if($user->checkLogin($emailId,$password))
     {
@@ -39,7 +38,6 @@ if(
     }
 
 }
-
 else
 {
     echo json_encode( "Incomplete Information please fill again.");

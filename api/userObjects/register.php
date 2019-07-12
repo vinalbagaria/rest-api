@@ -5,12 +5,12 @@ class Register
 {
     //database connection and table name
     private $conn;
-    private $user = "user";
-//    private $userAddress = "userAddress";
-    private $userCredentials = "userCredentials";
+    private $userTable = "user";
+    private $userAddressTable = "userAddress";
+    private $userCredentialsTable = "userCredentials";
 
 
-    //object properties
+    //OBJECT PROPERTIES
     public $firstName;
     public $lastName;
     public $contactNo;
@@ -32,7 +32,7 @@ class Register
     public $longitude;
     public $placeId;
 
-    //OBJECT OF getMasterData TABLE
+    //OBJECT OF GETMASTERDATA TABLE
     public $master;
 
     // constructor with $db as database connection
@@ -44,63 +44,28 @@ class Register
 
     public function getUserId()
     {
-        $userIdFetch ="SELECT userId FROM $this->user WHERE contactNo=:contactNo";
+        $userIdFetch ="SELECT userId FROM $this->userTable WHERE contactNo=:contactNo";
         $userIdFetchx=$this->conn->prepare($userIdFetch);
         $userIdFetchx->bindParam(":contactNo",$this->contactNo);
         $userIdFetchx->execute();
         $forUserId = $userIdFetchx->fetch(PDO::FETCH_ASSOC);
         $this->userId=$forUserId["userId"];
     }
+    function registerUser()
+    {
+        $query1 = "INSERT INTO  $this->userTable (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
+        $query2 ="INSERT INTO $this->userCredentialsTable(userId,password) VALUES(:userId,:password)";
 
-    function registerUser(){
+        $stmt1 = $this->conn->prepare($query1);
+        $stmt2 = $this->conn->prepare($query2);
 
+        $this->firstName = htmlspecialchars(strip_tags($this->firstName));
+        $this->lastName = htmlspecialchars(strip_tags($this->lastName));
+        $this->contactNo = htmlspecialchars(strip_tags($this->contactNo));
+        $this->emailId = htmlspecialchars(strip_tags($this->emailId));
+        $this->countryId = htmlspecialchars(strip_tags(($this->master)->getCountryId($this->country)));
+        $this->password = htmlspecialchars(strip_tags($this->password));
 
-        //INSERT STATEMENTS
-        $query1= "INSERT INTO  $this->user (firstName,lastName,contactNo,emailId,countryId) VALUES(:firstName,:lastName,:contactNo,:emailId,:countryId)";
-
-//        $query2="INSERT INTO $this->userAddress(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
-
-        $query3="INSERT INTO $this->userCredentials(userId,password) VALUES(:userId,:password)";
-
-        //PREPARE STATEMENTS
-        $stmt1= $this->conn->prepare($query1);
-//        $stmt2= $this->conn->prepare($query2);
-        $stmt3= $this->conn->prepare($query3);
-
-        //SANITIZE
-        //FOR USER DETAILS
-        $this->firstName=htmlspecialchars(strip_tags($this->firstName));
-        $this->lastName=htmlspecialchars(strip_tags($this->lastName));
-        $this->contactNo=htmlspecialchars(strip_tags($this->contactNo));
-        $this->emailId=htmlspecialchars(strip_tags($this->emailId));
-
-        //FOR COUNTRY
-        $this->countryId=htmlspecialchars(strip_tags(($this->master)->getCountryId($this->country)));
-
-        //FOR STATE
-//        $this->state=htmlspecialchars(strip_tags($this->state));
-//        $this->stateId=htmlspecialchars(strip_tags(($this->master)->getStateId($this->state , $this->countryId)));
-//
-//        //FOR CITY
-//        $this->city=htmlspecialchars(strip_tags($this->city));
-//        $this->cityId=htmlspecialchars(strip_tags(($this->master)->getCityId($this->city , $this->stateId)));
-//
-//        //FOR PINCODE
-//        $this->pincode=htmlspecialchars(strip_tags($this->pincode));
-//        $this->pincodeId=htmlspecialchars(strip_tags(($this->master)->getpincodeId($this->pincode , $this->cityId)));
-//
-//        //FOR REMAINING ADDRESS
-//        $this->line1=htmlspecialchars(strip_tags($this->line1));
-//        $this->line2=htmlspecialchars(strip_tags($this->line2));
-//        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
-//        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
-//        $this->placeId=htmlspecialchars(strip_tags($this->placeId));
-
-        //FOR PASSWORD
-        $this->password=htmlspecialchars(strip_tags($this->password));
-
-        //BINDING PARAMETERS
-        //USER TABLE
         $stmt1->bindParam(":firstName", $this->firstName);
         $stmt1->bindParam(":lastName", $this->lastName);
         $stmt1->bindParam(":contactNo", $this->contactNo);
@@ -110,38 +75,40 @@ class Register
         if($stmt1->execute())
         {
             $this->getUserId();
+            $stmt2->bindParam("userId", $this->userId);
+            $stmt2->bindParam("password", $this->password);
 
-//            USER ADDRESS TABLE
-//            $stmt2->bindParam(":userId", $this->userId);
-//            $stmt2->bindParam(":line1", $this->line1);
-//            $stmt2->bindParam(":line2", $this->line2);
-//            $stmt2->bindParam(":latitude", $this->latitude);
-//            $stmt2->bindParam(":longitude", $this->longitude);
-//            $stmt2->bindParam(":placeId", $this->placeId);
-//
-//            $stmt2->bindParam(":pincodeId", $this->pincodeId);
-
-            //USER CREDENTIALS TABLE
-            $stmt3->bindParam("userId", $this->userId);
-            $stmt3->bindParam("password", $this->password);
-
-            //EXECUTE STATEMENTS
-
-
-            if ( $stmt3->execute())
-                return true;
+            if( $stmt2->execute())
+                    return true;
+            //IF DATA GETS ONLY INSERTED IN USER TABLE
             else
-            {
-                $query4 = "DELETE FROM $this->user WHERE userId = :userId " ;
-                $stmt4 = $this->conn->prepare($query4) ;
-                $stmt4->bindParam(":userId" , $this->userId ) ;
-                $stmt4->execute();
+                {
 
-                return false ;
-
+                }
             }
+            return false ;
+    }
 
+    // FUNCTION FOR ADDING ADDRESS
+    function addUserAddress()
+    {
+        $query="INSERT INTO $this->userAddressTable(userId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:userId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
+        $stmt= $this->conn->prepare($query);
+        $this->getUserId();
+
+        $stmt->bindParam(":userId", $this->userId);
+        $stmt->bindParam(":line1", $this->line1);
+        $stmt->bindParam(":line2", $this->line2);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":placeId", $this->placeId);
+        $stmt->bindParam(":pincodeId", $this->pincodeId);
+
+        if($stmt->execute())
+        {
+            return true ;
         }
+
         return false ;
     }
 }

@@ -1,9 +1,9 @@
 <?php
-
 require_once 'updateMasterData.php';
 
 class   GetMasterData
 {
+    // DATABSAE CONNECTION WITH TABLE NAMES
     private $conn;
     private $countryTable = "country";
     private $stateTable = "state";
@@ -17,11 +17,13 @@ class   GetMasterData
     private $propertyTypeTable = "propertyType" ;
     private $socialMediaTable = "socialMedia";
     private $unitTable = "unit";
+    private $propertyAddressTable = "propertyAddress" ;
 
+    // CONSTRUCTOR WITH $db AS DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
-        $this->updateMaster = new UpdateMasterData( $db );
+        $this->updateMaster = new UpdateMasterData( $db );        // OBJECT OF UpdateMasterData
     }
 
     //FUNCTION FOR GETTING COUNTRYID
@@ -32,7 +34,6 @@ class   GetMasterData
         $countryId->bindParam(":country", $country);
         $countryId->execute();
         $forCountry = $countryId->fetch(PDO::FETCH_ASSOC);
-
         return $forCountry["countryId"];
     }
 
@@ -40,55 +41,52 @@ class   GetMasterData
     public function getStateId($state , $countryId)
     {
         $query="SELECT stateId FROM $this->stateTable WHERE state = :state";
-        $exist1= $this->conn->prepare($query);
-        $exist1->bindParam(":state",  $state);
-        $exist1->execute();
-        $stateExist=$exist1->fetch(PDO::FETCH_ASSOC);
+        $existState = $this->conn->prepare($query);
+        $existState->bindParam(":state",  $state);
+        $existState->execute();
+        $stateExist = $existState->fetch(PDO::FETCH_ASSOC);
 
-        if( !$stateExist )
+        if(!$stateExist)
         {
             $this->updateMaster->addState($state, $countryId);
-
-            $exist1->execute();
-            $stateExist = $exist1->fetch(PDO::FETCH_ASSOC);
+            $existState->execute();
+            $stateExist = $existState->fetch(PDO::FETCH_ASSOC);
         }
         return $stateExist["stateId"];
-
     }
 
     //FUNCTION FOR GETTING CITYID
-    public function getCityId($city , $stateId)
+    public function getCityId($city, $stateId)
     {
         $existCity = "SELECT cityId FROM  $this->cityTable WHERE city=:city";
-        $exist2 = $this->conn->prepare($existCity);
-        $exist2->bindParam(":city",$city);
-        $exist2->execute();
-        $cityExist = $exist2->fetch(PDO::FETCH_ASSOC);
+        $existCity = $this->conn->prepare($existCity);
+        $existCity->bindParam(":city",$city);
+        $existCity->execute();
+        $cityExist = $existCity->fetch(PDO::FETCH_ASSOC);
 
         if(!$cityExist)
         {
-            $this->updateMaster->addCity($city,$stateId) ;
-
-            $exist2->execute();
-            $cityExist=$exist2->fetch(PDO::FETCH_ASSOC);
+            $this->updateMaster->addCity($city, $stateId) ;
+            $existCity->execute();
+            $cityExist=$existCity->fetch(PDO::FETCH_ASSOC);
         }
         return $cityExist["cityId"];
     }
 
     //FUNCTION FOR GETTING PINCODEID
-    public function getPincodeId( $pincode ,$cityId )
+    public function getPincodeId($pincode, $cityId )
     {
         $query = "SELECT pincodeId FROM $this->pincodeTable WHERE pincode = :pincode" ;
-        $exist3 = $this->conn->prepare($query);
-        $exist3->bindParam(":pincode",$pincode);
-        $exist3->execute();
+        $existPincodeId = $this->conn->prepare($query);
+        $existPincodeId->bindParam(":pincode",$pincode);
+        $existPincodeId->execute();
+        $pincodeExist = $existPincodeId->fetch(PDO::FETCH_ASSOC);
 
-        $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
         if(!$pincodeExist)
         {
             $this->updateMaster->addPincode($pincode , $cityId);
-            $exist3->execute();
-            $pincodeExist = $exist3->fetch(PDO::FETCH_ASSOC);
+            $existPincodeId->execute();
+            $pincodeExist = $existPincodeId->fetch(PDO::FETCH_ASSOC);
         }
         return $pincodeExist["pincodeId"];
     }
@@ -151,7 +149,6 @@ class   GetMasterData
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
             $data[]=$row["amenity"];
-
         }
         return $data;
     }
@@ -164,7 +161,6 @@ class   GetMasterData
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
             $data[]=$row["propertyType"];
-
         }
         return $data;
     }
@@ -177,7 +173,6 @@ class   GetMasterData
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
             $data[]=$row["configurationType"];
-
         }
         return $data;
     }
@@ -190,7 +185,6 @@ class   GetMasterData
         $exist->execute();
         while($row = $exist->fetch(PDO::FETCH_ASSOC)){
             $data[]=$row["socialMediaName"];
-
         }
         return $data;
     }
@@ -232,5 +226,36 @@ class   GetMasterData
         }
         return $data ;
     }
+    //FUNCTION TO GET PINCODE USING PINCODE ID
+    function getPincode($pincodeId)
+    {
+        $query = "SELECT pincode,cityId FROM $this->pincodeTable WHERE pincodeId = :pincodeId " ;
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":pincodeId" , $pincodeId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC) ;
+        return $data ;
+    }
 
+    //FUNCTION TO GET CITY USING CITY ID
+    function getCity($cityId)
+    {
+        $query = "SELECT city,stateId FROM $this->cityTable WHERE cityId = :cityId " ;
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":cityId" , $cityId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC) ;
+        return $data ;
+    }
+
+    //FUNCTION TO GET STATE USING STATE ID
+    function getState($stateId)
+    {
+        $query = "SELECT state,countryId FROM $this->stateTable WHERE stateId = :stateId " ;
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":stateId" , $stateId);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC) ;
+        return $data ;
+    }
 }

@@ -18,22 +18,13 @@ $data = json_decode(file_get_contents("php://input"));
 
 //DISPLAY ROLES FOR A USER
 $userId = $_GET['userId'];
-//echo json_encode(array("userId"=> $userId));
-//$userRoles = $userDetails->getUserRoles($userId);
-//echo json_encode(array("userRoles"=> $userRoles));
-
 if(!empty($userId))
 {
     $info = $userDetails->getUserDetails($userId);
-//    echo json_encode($info);
-
     $countryId = $info['countryId'];
-
-
     $userCountryDetails = new GetMasterData($db);
     $country = $userCountryDetails->getCountry($countryId);
-//    echo json_encode($country) ;
-    array_push($info ,$country['country']) ;
+    $info['country'] = $country['country'];
     echo json_encode($info);
 }
 

@@ -17,18 +17,22 @@ if(
 ){
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
+
     $updateProfile = new UpdateProfile($db);
+
     if($updateProfile->changeFirstName($data->userId,$data->firstName) && $updateProfile->changeLastName($data->userId , $data->lastName))
         echo json_encode("Update Successful");
     else
         echo json_encode("Update Unsuccessful");
 }
-
 if(
     !empty($data->userId) &&
     !empty($data->contactNo)
 ){
-    //    Verify otp
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $updateProfile = new UpdateProfile($db);
+    //VERIFY OTP
     if($updateProfile->changeContactNo($data->userId,$data->contactNo))
         echo json_encode($data->contactNo);
     else
@@ -38,9 +42,12 @@ if(
     !empty($data->userId)  &&
     !empty($data->emailId)
 ){
-    //    Verify otp
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $updateProfile = new UpdateProfile($db);
+    //VERIFY OTP
     if($updateProfile->changeEmailId($data->userId,$data->emailId))
-        echo json_encode($data->emailId);
+        echo json_encode("Update Successful");
     else
         echo json_encode("Update Unsuccessful");
 }
@@ -52,6 +59,10 @@ if(
     !empty($data->longitude) &&
     !empty($data->placeId)
 ){
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $updateProfile = new UpdateProfile($db);
+
     if( $updateProfile->changeAddress($data->userAddressId,$data->line1,$data->line2,$data->latitude,$data->longitude,$data->placeId ))
         echo json_encode("Update Successful");
     else
@@ -59,14 +70,17 @@ if(
 }
 if(
     !empty($data->pincode) &&
-    !empty($data->userAddressId) &&
     !empty($data->city) &&
     !empty($data->state) &&
     !empty($data->country) &&
-    !empty($data->userId) &&
-    !empty($data->userAddressId)
+    !empty($data->userId)
+
 ){
-    if( $updateProfile->changeCountryId($data->userId,$data->country) && $updateProfile->changePincodeId($data->userAddressId,$data->pincode,$data->city,$data->state,$data->country))
+    $instance = ConnectDb::getInstance();
+    $db = $instance->getConnection();
+    $updateProfile = new UpdateProfile($db);
+
+    if( $updateProfile->changeCountryId($data->userId,$data->country) && $updateProfile->changePincodeId($data->userId,$data->pincode,$data->city,$data->state,$data->country))
         echo json_encode("Update Successful");
     else
         echo json_encode("Update Unsuccessful");

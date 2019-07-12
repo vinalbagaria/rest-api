@@ -7,11 +7,11 @@ header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// database connection will be here
-// include database and object files
 require_once '../config/database.php';
 require_once '../propertyObjects/getPropertyDetails.php';
 require_once '../userObjects/getUserDetails.php';
+require_once '../MasterData/getMasterData.php' ;
+require_once '../MasterData/getPropertyMasterData.php' ;
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -23,17 +23,15 @@ $flag = $_GET['flag'];
 $instance = ConnectDb::getInstance();
 $db = $instance->getConnection();
 
-//GET PROPERTYID FROM USERID
+$propertyAddress = new GetMasterData($db) ;
 $propertyDetails = new GetPropertyDetails($db);
-//$propertyId = $propertyDetails->getPropertyId($userId);
-//echo json_encode(array("propertyId" =>$propertyId ));
-
+$propertyData = new GetPropertyMasterData($db) ;
 
 switch($flag)
 {
 
     case "amenity" :
-        $amenity = $propertyDetails->getAmenityId($propertyId) ;
+        $amenity = $propertyDetails->getAmenity($propertyId) ;
         echo json_encode($amenity) ;
         break ;
 
@@ -59,6 +57,7 @@ switch($flag)
         //GETTING floorNo FROM PROPERTYID
         $floorNo = $propertyDetails->getFloorNo($propertyId);
         echo json_encode($floorNo );
+        break;
 
     case "floors":
         //GETTING FLOORS FROM PROPERTYID
@@ -116,8 +115,43 @@ switch($flag)
     case "all":
         //GETTING ALL DETAILS FROM PROPERTYID
         $propertyDetailsinfo = $propertyDetails->getPropertyDetails($propertyId);
-        $amenity = $propertyDetails->getAmenityId($propertyId) ;
-        array_push($propertyDetailsinfo , $amenity ) ;
+//        echo json_encode($propertyDetailsinfo)."<br/>";
+        $amenity = $propertyDetails->getAmenity($propertyId) ;
+        $propertyDetailsinfo['amenity'] = $amenity ;
+        $address = $propertyDetails->getPropertyAddress($propertyId);
+        $pincode = $propertyAddress->getPincode($address['pincodeId']);
+        $city = $propertyAddress->getCity($pincode['cityId']);
+        $state = $propertyAddress->getState($city['stateId']) ;
+        $country = $propertyAddress->getCountry($state['countryId']) ;
+        $propertyPrice = $propertyDetails->getPropertyPrice($propertyId) ;
+        $propertyType = $propertyData->getPropertyType($propertyDetailsinfo['propertyTypeId']) ;
+        $role = $propertyData->getRoleType($propertyDetailsinfo['userRoleId']) ;
+        $configuration = $propertyData->getConfiguration($propertyDetailsinfo['configurationId']);
+        $unit = $propertyData->getUnit($propertyPrice['unitId']) ;
+
+        $propertyDetailsinfo['carpetArea'] = $propertyPrice['carpetArea'] ;
+        $propertyDetailsinfo['baseValue'] = $propertyPrice['baseValue'] ;
+        $propertyDetailsinfo['pricePerUnit'] = $propertyPrice['pricePerUnit'] ;
+        $propertyDetailsinfo['buildUpArea'] = $propertyPrice['buildUpArea'] ;
+        $propertyDetailsinfo['registration'] = $propertyPrice['registration'] ;
+        $propertyDetailsinfo['stampDuty'] = $propertyPrice['stampDuty'] ;
+        $propertyDetailsinfo['maintenance'] = $propertyPrice['maintenance'] ;
+
+        $propertyDetailsinfo['unitName'] = $unit['unitName'] ;
+        $propertyDetailsinfo['roleType'] = $role['roleType'] ;
+        $propertyDetailsinfo['configurationType'] = $configuration['configurationType'] ;
+        $propertyDetailsinfo['propertyType'] = $propertyType['propertyType'] ;
+
+        $propertyDetailsinfo['line1'] = $address['line1'] ;
+        $propertyDetailsinfo['line2'] = $address['line2'] ;
+        $propertyDetailsinfo['latitude'] = $address['latitude'] ;
+        $propertyDetailsinfo['longitude'] = $address['longitude'] ;
+        $propertyDetailsinfo['placeId'] = $address['placeId'] ;
+
+        $propertyDetailsinfo['pincode'] = $pincode['pincode'] ;
+        $propertyDetailsinfo['city'] = $city['city'] ;
+        $propertyDetailsinfo['state'] = $state['state'] ;
+        $propertyDetailsinfo['country'] = $country['country'] ;
         echo json_encode($propertyDetailsinfo);
         break;
 

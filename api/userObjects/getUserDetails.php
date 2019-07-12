@@ -1,21 +1,17 @@
 <?php
 require_once '../propertyObjects/registerPropertyDetails.php' ;
+
 class GetUserDetails
 {
+    //DATABASE CONNECTION AND TABLE NAME
     private $conn;
     private $userTable = "user";
-    private $userAddressTable = "userAddress";
-    private $userCredentialsTable = "userCredentials";
     private $userRoleTable = " userRole ";
-    private $countryTable = "country";
-    private $stateTable = "state";
-    private $cityTable = "city";
-    private $pincodeTable = "pincode";
-    private $updateMaster;
     private $roleTable = "role" ;
     private $data ;
     private $update ;
 
+    //DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
@@ -54,12 +50,10 @@ class GetUserDetails
             $stmt->execute();
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
         }
-        echo json_encode(array("message" => $data["userRoleId"]));
         return $data["userRoleId"] ;
     }
 
-
-
+    // GETTING USER DETAILS USING A PARTICULAR USERID
     function getUserDetails($userId)
     {
         $query = "SELECT firstName,lastName,contactNo,emailId,countryId FROM $this->userTable WHERE userId = :userId";

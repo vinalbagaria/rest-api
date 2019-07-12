@@ -1,4 +1,3 @@
-
 <?php
 
 // required headers
@@ -17,7 +16,7 @@ $instance = ConnectDb::getInstance();
 $db = $instance->getConnection();
 $master = new GetMasterData($db);
 $flag = $_GET['flag'];
-// echo json_encode($flag);
+
 switch($flag)
 {
     case "countries":

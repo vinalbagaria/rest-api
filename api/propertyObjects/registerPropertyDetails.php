@@ -8,13 +8,23 @@ require_once '../propertyObjects/getPropertyDetails.php';
 class RegisterPropertyDetails
 
 {
+    //ALL TABLES
     private $propertyDetailsTable = "propertyDetails";
     private $userRoleTable = "userRole";
     private $propertyAddress = "propertyAddress";
     private $propertyAmenityTable = "propertyAmenity" ;
     private $propertyPriceTable = "propertyPrice" ;
 
+    //CONNECTION VARIABLE
     public $conn;
+
+    //OBJECTS
+    public $getPropertyMasterData;  //OBJECT OF GET PROPERTY MASTER DATA
+    public $getPropertyDetails;     //OBJECT OF GET PROPERTY DETAILS
+    public $masterDetails;          //OBJECT OF GET MASTER DATA
+
+    //PROPERTY DETAILS TABLE VARIABLES
+    public $propertyId ;
     public $userRoleId;
     public $propertyName;
     public $propertyStatus;
@@ -34,15 +44,16 @@ class RegisterPropertyDetails
     public $facing = NULL ;
     public $noOfBathrooms = NULL ;
     public $noOfBalconies = NULL ;
-    public $master;
-    public $findMaster;
     public $roleType;
     public $roleId;
-    public $temp;
-    public $propertyId ;
+
+    //PROPERTY AMENITY TABLE
     public $amenity ;
     public $amenityId ;
+    public $temp;
+    public $iterator=0 ;
 
+    //PROPERTY ADDRESS TABLE
     public $country;
     public $countryId;
     public $state;
@@ -56,11 +67,8 @@ class RegisterPropertyDetails
     public $latitude;
     public $longitude;
     public $placeId;
-    //OBJECT OF getMasterData TABLE
-    public $masterDetails;
-    public $iterator=0 ;
 
-    // PROPERTYPRICE TABLE ;
+    //PROPERTY PRICE TABLE ;
     public $carpetArea ;
     public $pricePerUnit ;
     public $buildUpArea ;
@@ -73,13 +81,15 @@ class RegisterPropertyDetails
 
     function __construct($db)
     {
+        //CONNECTION ESTABLISHED
         $this->conn = $db;
-        $this->master = new GetPropertyMasterData($db);
-        $this->findMaster = new GetPropertyDetails($db);
+        //CREATION OF OBJECTS
+        $this->getPropertyMasterData = new GetPropertyMasterData($db);
+        $this->getPropertyDetails = new GetPropertyDetails($db);
         $this->masterDetails=new GetMasterData($db);
     }
 
-    //INSERTING INTO USERROLE TABLE
+    //INSERTING ROLE FOR A PARTICULAR USER INTO USER ROLE TABLE
     function addUserRole($userId,$roleId)
     {
         $query = "INSERT INTO $this->userRoleTable(userId,roleId) VALUES (:userId,:roleId)";
@@ -87,14 +97,15 @@ class RegisterPropertyDetails
         $stmt->bindParam(":userId",$userId);
         $stmt->bindParam(":roleId",$roleId);
         $stmt->execute();
-        
     }
 
+    //FOR ADDING PROPERTY ADDRESS
     function addPropertyAddress()
     {
-        $this->propertyId = $this->findMaster->getPropertyId($this->userId);
         $query = "INSERT INTO $this->propertyAddress(propertyId,line1,line2,latitude,longitude,placeId,pincodeId) VALUES (:propertyId,:line1,:line2,:latitude,:longitude,:placeId,:pincodeId)";
         $stmt = $this->conn->prepare($query);
+
+        //SANITIZE
         //FOR COUNTRY
         $this->countryId=htmlspecialchars(strip_tags(($this->masterDetails)->getCountryId($this->country)));
         //FOR STATE
@@ -125,56 +136,39 @@ class RegisterPropertyDetails
             return true ;
         else
             return false ;
-
     }
 
-    //INSERTING NEW PROPERTY
+    //ADDING NEW PROPERTY DETAILS
     function registerPropertyDetails()
     {
         $query = " INSERT INTO $this->propertyDetailsTable(propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userId,userRoleId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,facing,noOfBathrooms,noOfBalconies) VALUES(:propertyName,:propertyStatus,:reraNo,:propertyTypeId,
         :configurationId,:userId,:userRoleId,:floorNo,:floors,:carParking,:furnishedType,:ageOfProperty,:description,
-       :possessionDate,:facing,:noOfBathrooms,:noOfBalconies) " ;
-
-        
-        $stmt = $this->conn->prepare($query) ;
-        $this->configurationId = $this->master->getConfigurationId($this->configurationType) ;
-        $this->userRoleId = $this->master->getRoleId($this->roleType) ;
-        $this->propertyTypeId = $this->master->getPropertyTypeId($this->propertyType) ;
+       :possessionDate,:facing,:noOfBathrooms,:noOfBalconies) ";
+        $stmt = $this->conn->prepare($query);
 
         //SANITIZE
         $this->propertyName = htmlspecialchars(strip_tags($this->propertyName));
         $this->propertyStatus = htmlspecialchars(strip_tags($this->propertyStatus));
         $this->reraNo = htmlspecialchars(strip_tags($this->reraNo));
-
-        $this->propertyTypeId = htmlspecialchars(strip_tags(($this->master)->getPropertyTypeId($this->propertyType)));
-
-        $this->configurationId = htmlspecialchars(strip_tags(($this->master)->getConfigurationId($this->configurationType)));
-
+        $this->propertyTypeId = htmlspecialchars(strip_tags(($this->getPropertyMasterData)->getPropertyTypeId($this->propertyType)));
+        $this->configurationId = htmlspecialchars(strip_tags(($this->getPropertyMasterData)->getConfigurationId($this->configurationType)));
         $this->userId = htmlspecialchars(strip_tags($this->userId));
+        $this->roleId = htmlspecialchars(strip_tags(($this->getPropertyMasterData)->getRoleId($this->roleType)));
 
-        $this->roleId = htmlspecialchars(strip_tags(($this->master)->getRoleId($this->roleType)));
+        //FOR INSERTING NEW USER ROLE
+        $this->addUserRole($this->userId,$this->roleId);
 
-        $this->addUserRole($this->userId,$this->roleId);        
-
-        $this->userRoleId = htmlspecialchars(strip_tags(($this->findMaster)->getUserRoleId($this->userId)));
-
+        $this->userRoleId = htmlspecialchars(strip_tags(($this->getPropertyDetails)->getUserRoleId($this->userId)));
         $this->floors = htmlspecialchars(strip_tags($this->floors));
         $this->floorNo = htmlspecialchars(strip_tags($this->floorNo));
-
         $this->carParking = htmlspecialchars(strip_tags($this->carParking));
         $this->furnishedType = htmlspecialchars(strip_tags($this->furnishedType));
-
         $this->ageOfProperty = htmlspecialchars(strip_tags($this->ageOfProperty));
-
         $this->description = htmlspecialchars(strip_tags($this->description));
         $this->possessionDate = htmlspecialchars(strip_tags($this->possessionDate));
-
         $this->facing = htmlspecialchars(strip_tags($this->facing));
-
         $this->noOfBathrooms = htmlspecialchars(strip_tags($this->noOfBathrooms));
-
         $this->noOfBalconies = htmlspecialchars(strip_tags($this->noOfBalconies));
-
 
         //BINDING PARAMS
         $stmt->bindParam(":propertyName" , $this->propertyName);
@@ -195,77 +189,69 @@ class RegisterPropertyDetails
         $stmt->bindParam(":noOfBalconies" , $this->noOfBalconies);
         $stmt->bindParam(":userId",$this->userId);
 
-        //INSERTION COMMAND
-        if($stmt->execute())
-            return true ;
-        else
+        //EXECUTION OF QUERY
+        if($stmt->execute()) {
+            //GETTING AUTOINCREMENT PROPERTY ID FROM DATABASE
+            $this->propertyId = $this->conn->lastInsertId();
+            return true;
+        } else
             return false ;
     }
-    //INSERTING INTO PROPERTY AMENITY TABLE
+
+    //INSERT AMENITY INTO PROPERTY AMENITY TABLE
     function addPropertyAmenity()
     {
         //INSERTING INTO AMENITY ID ARRAY FROM AMENITY TABLE WITH AMENITY ID
         foreach($this->amenity as $key => $value)
         {
-            $this->temp = $value ;
-            $this->amenityId[] = htmlspecialchars(strip_tags(($this->master)->getAmenityId($this->temp)));
+            $this->temp = $value;
+            $this->amenityId[] = htmlspecialchars(strip_tags(($this->getPropertyMasterData)->getAmenityId($this->temp)));
             $this->iterator += 1;
         }
-
-        // FINDING OUT PROPERTYID
-        $query= "SELECT propertyId from $this->propertyDetailsTable WHERE userId = :userId " ;
-        $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":userId" , $this->userId );
-        $stmt->execute();
-
-        $tempPropertyId = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->propertyId = $tempPropertyId["propertyId"];
-
         //FOR EACH AMENITY ID THERE WILL BE INSERTION
         foreach($this->amenityId as $key => $value)
         {
             $this->temp = $value;
-
-            $query1 = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId) VALUES( :temp , :propertyId )";
-
-            $stmt1 = $this->conn->prepare($query1) ;
-            $stmt1->bindParam(":temp", $this->temp);
-            $stmt1->bindParam(":propertyId",$this->propertyId);
-            $stmt1->execute();
+            $query = "INSERT INTO $this->propertyAmenityTable (amenityId,propertyId) VALUES( :temp , :propertyId )";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":temp", $this->temp);
+            $stmt->bindParam(":propertyId",$this->propertyId);
+            $stmt->execute();
             $this->iterator -= 1;
         }
-
         if( $this->iterator == 0)
             return true;
         else
             return false;
-
     }
 
+    //ADDING PROPERTY PRICE IN PROPERTY PRICE TABLE
     function addPropertyPrice()
     {
          $query = "INSERT INTO $this->propertyPriceTable
         ( pricePerUnit , carpetArea , propertyId , buildUpArea , baseValue , registration , stampDuty , maintenance , unitId) 
         VALUES ( :pricePerUnit , :carpetArea , :propertyId , :buildUpArea , :baseValue , :registration , :stampDuty ,
-        :maintenance , :unitId ) " ;
-        $this->unitId = $this->master->getUnitId( $this->unitName );
+        :maintenance , :unitId ) ";
 
+         //GETTING THE UNIT ID FOR A PARTICULAR UNIT
+        $this->unitId = $this->getPropertyMasterData->getUnitId($this->unitName);
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit ) ;
-        $stmt->bindParam(":carpetArea" , $this->carpetArea ) ;
-        $stmt->bindParam(":propertyId" , $this->propertyId ) ;
-        $stmt->bindParam(":buildUpArea" , $this->buildUpArea ) ;
-        $stmt->bindParam(":baseValue" , $this->baseValue ) ;
-        $stmt->bindParam(":registration" , $this->registration ) ;
-        $stmt->bindParam(":stampDuty" , $this->stampDuty ) ;
-        $stmt->bindParam(":maintenance" , $this->maintenance ) ;
-        $stmt->bindParam(":unitId" , $this->unitId ) ;
+        $stmt->bindParam(":pricePerUnit" , $this->pricePerUnit );
+        $stmt->bindParam(":carpetArea" , $this->carpetArea );
+        $stmt->bindParam(":propertyId" , $this->propertyId );
+        $stmt->bindParam(":buildUpArea" , $this->buildUpArea );
+        $stmt->bindParam(":baseValue" , $this->baseValue );
+        $stmt->bindParam(":registration" , $this->registration );
+        $stmt->bindParam(":stampDuty" , $this->stampDuty );
+        $stmt->bindParam(":maintenance" , $this->maintenance );
+        $stmt->bindParam(":unitId" , $this->unitId );
         if($stmt->execute())
                 return true ;
         else
             return false;
     }
 
+    //DELETE A PROPERTY
     function deleteProperty($propertyId)
     {
         $query = "DELETE FROM $this->propertyDetailsTable WHERE propertyId = :propertyId " ;

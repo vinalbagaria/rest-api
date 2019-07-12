@@ -23,7 +23,6 @@ if(
     !empty($data->carParking) &&
     !empty($data->furnishedType) &&
     !empty($data->amenity) &&
-
     !empty($data->carpetArea)&&
     !empty($data->baseValue)&&
     !empty($data->unitName) &&
@@ -40,13 +39,12 @@ if(
 ){
     $instance = ConnectDb::getInstance();
     $db = $instance->getConnection();
-    
+
     $update = new UpdatePropertyDetails($db) ;
     $update->propertyName = $data->propertyName ;
     $update->propertyStatus = $data->propertyStatus ;
     $update->propertyType = $data->propertyType ;
     $update->configurationType = $data->configurationType ;
-    $update->reraNo = $data->reraNo;
     $update->userId = $data->userId ;
     $update->roleType = $data->roleType ;
     $update->floorNo = $data->floorNo ;
@@ -54,6 +52,20 @@ if(
     $update->carParking = $data->carParking ;
     $update->furnishedType = $data->furnishedType ;
     $update->amenity = $data->amenity ;
+    $update->carpetArea = $data->carpetArea;
+    $update->baseValue = $data->baseValue;
+    $update->unitName = $data->unitName;
+    $update->propertyId = $data->propertyId ;
+    $update->line1 = $data->line1 ;
+    $update->line2 = $data->line2 ;
+    $update->latitude = $data->latitude ;
+    $update->longitude = $data->longitude ;
+    $update->placeId = $data->placeId ;
+    $update->pincode = $data->pincode ;
+    $update->city = $data->city  ;
+    $update->state = $data->state ;
+    $update->country = $data->country  ;
+
     if(!empty($data->facing))
         $update->facing = $data->facing ;
     if(!empty($data->ageOfProperty))
@@ -66,12 +78,6 @@ if(
         $update->noOfBathrooms  = $data->noOfBathrooms ;
     if(!empty($data->noOfBalconies))
         $update->noOfBalconies =$data->noOfBalconies ;
-
-    $update->carpetArea = $data->carpetArea;
-    $update->baseValue = $data->baseValue;
-    $update->unitName = $data->unitName;
-
-
     if(!empty($data->pricePerUnit))
         $update->pricePerUnit = $data->pricePerUnit;
     if(!empty($data->buildUpArea))
@@ -82,17 +88,8 @@ if(
         $update->stampDuty = $data->stampDuty;
     if(!empty($data->maintenance))
         $update->maintenance = $data->maintenance ;
-
-    $update->propertyId = $data->propertyId ;
-    $update->line1 = $data->line1 ;
-    $update->line2 = $data->line2 ;
-    $update->latitude = $data->latitude ;
-    $update->longitude = $data->longitude ;
-    $update->placeId = $data->placeId ;
-    $update->pincode = $data->pincode ;
-    $update->city = $data->city  ;
-    $update->state = $data->state ;
-    $update->country = $data->country  ;
+    if(!empty($data->reraNo))
+        $update->reraNo = $data->reraNo;
 
     if($update->updatePropertyDetails())
     {
@@ -117,6 +114,4 @@ if(
         echo json_encode( "Address table not updated Successfully");
 
 }else
-{
     echo json_encode( "Incomplete Data");
-}

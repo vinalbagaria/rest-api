@@ -3,24 +3,19 @@
 class GetPropertyDetails
 {
     private $conn ;
+
+    //TABLES
     private $propertyDetailsTable = "propertyDetails" ;
     private $userRoleTable = "userRole" ;
     private $amenitiesTable = "amenities" ;
     private $propertyAmenityTable = "propertyAmenity" ;
+    private $propertyAddressTable = "propertyAddress" ;
+    private $propertyPriceTable = "propertyPrice" ;
+
+
     public function __construct($db)
     {
         $this->conn = $db;
-    }
-
-    //FUNCTION TO GET  PROPERTY ID BASED ON USER ID
-    public function getPropertyId($userId)
-    {
-        $query = " SELECT propertyId from $this->propertyDetailsTable where userId = :userId";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindparam(":userId" , $userId);
-        $stmt->execute();
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $data['propertyId'];
     }
 
     //FUNCTION TO GET  PROPERTY NAME BASED ON PROPERTY ID
@@ -177,6 +172,7 @@ class GetPropertyDetails
         return $data['userRoleId'];
     }
 
+    //FUNCTION TO GET ALL PROPERTY DETAILS OF A PARTICULAR PROPERTY
     function getPropertyDetails($propertyId)
     {
         $query = "SELECT propertyName,propertyStatus,reraNo,propertyTypeId,configurationId,userRoleId,developerId,floorNo,floors,carParking,furnishedType,ageOfProperty,description,possessionDate,
@@ -188,23 +184,45 @@ class GetPropertyDetails
         return $data;
     }
 
-    function getAmenityId($propertyId)
+    //FUNCTION TO GET AMENITY OF A PROPERTY
+    function getAmenity($propertyId)
     {
         $query1 = "SELECT amenity FROM $this->amenitiesTable WHERE amenityId IN (SELECT amenityId FROM 
                    $this->propertyAmenityTable WHERE propertyId = :propertyId )" ;
-
-
         $stmt = $this->conn->prepare($query1);
         $stmt->bindParam(":propertyId",$propertyId);
         $stmt->execute();
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             $data[]=$row["amenity"];
-
-//            echo json_encode($row) ;
         }
         return $data;
     }
+
+    //FUNCTION TO GET ADDRESS OF A PROPERTY
+    function getPropertyAddress($propertyId)
+    {
+        $query = "SELECT line1,line2,latitude,longitude,placeId,pincodeId FROM $this->propertyAddressTable 
+        WHERE propertyId = :propertyId" ;
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam(":propertyId" , $propertyId ) ;
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC) ;
+        return $data ;
+    }
+
+    //FUNCTION TO GET PRICE OF A PROPERTY
+    function getPropertyPrice($propertyId)
+    {
+        $query = "SELECT pricePerUnit,carpetArea,buildUpArea,baseValue,registration,stampDuty,maintenance,unitId
+                  FROM $this->propertyPriceTable WHERE propertyId = :propertyId" ;
+        $stmt = $this->conn->prepare($query) ;
+        $stmt->bindParam(":propertyId" , $propertyId ) ;
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC) ;
+        return $data ;
+    }
+
 
 
 }

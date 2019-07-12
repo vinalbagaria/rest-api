@@ -2,6 +2,7 @@
 
 class UpdateMasterData
 {
+    // DATABASE CONNECTION AND TABLE NAMES
     private $conn;
     private $stateTable = "state" ;
     private $cityTable = "city" ;
@@ -13,14 +14,15 @@ class UpdateMasterData
     private $propertyTypeTable = "propertyType" ;
     private $socialMediaTable = "socialMedia";
     private $unitTable = "unit";
-   
+
+    // CONSTRUCTOR WITH $db AS DATABASE CONNECTION
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
     //ADDING NEW STATE
-    function addState($state,$countryId)
+    function addState($state, $countryId)
     {
         $query = "INSERT INTO $this->stateTable(state , countryId) VALUES (:state , :countryId)";
         $stmt= $this->conn->prepare( $query );
@@ -35,13 +37,13 @@ class UpdateMasterData
     }
 
     //ADDING NEW CITY
-    function addCity($city,$stateId)
+    function addCity($city, $stateId)
     {
-        $query4 = "INSERT INTO $this->cityTable(city,stateId) VALUES (:city,:stateId)";
-        $stmt4 = $this->conn->prepare($query4);
-        $stmt4->bindParam(":city", $city);
-        $stmt4->bindParam(":stateId", $stateId);
-        if($stmt4->execute())
+        $query = "INSERT INTO $this->cityTable(city,stateId) VALUES (:city,:stateId)";
+        $stmt = $this->conn->prepare($query4);
+        $stmt->bindParam(":city", $city);
+        $stmt->bindParam(":stateId", $stateId);
+        if($stmt->execute())
             return true;
         else
             return false ;
@@ -63,7 +65,7 @@ class UpdateMasterData
     //ADDING NEW USER ROLE
     function addUserRole($roleType)
     {
-        $query = "INSERT INTO $this->roleTable (roleType) values (:roleType)" ;
+        $query = "INSERT INTO $this->roleTable (roleType) values (:roleType)";
         $stmt = $this->conn->prepare($query) ;
         $stmt->bindParam(":roleType" , $roleType ) ;
         if($stmt->execute())
@@ -76,9 +78,9 @@ class UpdateMasterData
     //ADDING NEW AMENITY
     function addAmenity($amenity)
     {
-        $query = "INSERT INTO $this->amenitiesTable(amenity) values (:amenity)" ;
+        $query = "INSERT INTO $this->amenitiesTable(amenity) values (:amenity)";
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":amenity" , $amenity ) ;
+        $stmt->bindParam(":amenity" , $amenity) ;
         if($stmt->execute())
             return true;
         else
@@ -90,7 +92,7 @@ class UpdateMasterData
     {
         $query = "INSERT INTO $this->documentTypeTable (documentName) values (:documentName)" ;
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":documentName" , $documentName ) ;
+        $stmt->bindParam(":documentName" , $documentName) ;
         if($stmt->execute())
             return true;
         else
@@ -110,24 +112,24 @@ class UpdateMasterData
             return false ;
     }
 
-    ////ADDING NEW CONFIGURATION TYPE
+    //ADDING NEW CONFIGURATION TYPE
     function addConfigurationType($configurationType)
     {
         $query = "INSERT INTO $this->configurationTable (configurationType) VALUES (:configurationType)" ;
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":configurationType" , $configurationType ) ;
+        $stmt->bindParam(":configurationType" , $configurationType) ;
         if($stmt->execute())
             return true ;
         else
             return false;
     }
 
-    ////ADDING NEW SOCIAL MEDIA
+    //ADDING NEW SOCIAL MEDIA
     function addSocialMedia($socialMediaName)
     {
         $query = "INSERT INTO $this->socialMediaTable (socialMediaName) VALUES (:socialMediaName)" ;
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":socialMediaName" , $socialMediaName ) ;
+        $stmt->bindParam(":socialMediaName" , $socialMediaName) ;
         if($stmt->execute())
             return true ;
         else
@@ -137,9 +139,9 @@ class UpdateMasterData
     //ADDING NEW UNIT
     function addUnit($unitName)
     {
-        $query = "INSERT INTO $this->unitTable (unitName) VALUES (:unitName)" ;
+        $query = "INSERT INTO $this->unitTable (unitName) VALUES (:unitName)";
         $stmt = $this->conn->prepare($query) ;
-        $stmt->bindParam(":unitName" , $unitName ) ;
+        $stmt->bindParam(":unitName" , $unitName) ;
         if($stmt->execute())
             return true ;
         else

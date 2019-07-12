@@ -20,8 +20,9 @@ if(
     $db = $instance->getConnection();
     $update = new UpdatePassword($db);
     $update->changePassword($data->userId,$data->oldPassword,$data->newPassword);
+
 }
 else
 {
-    echo json_encode(array("message" => "incomplete data")) ;
+    echo json_encode( "incomplete data") ;
 }
